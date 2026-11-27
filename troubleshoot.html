@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>No internet - troubleshooting</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #f6f7f9; color: #1b1f24; }
+    main { max-width: 640px; margin: 0 auto; padding: 16px; }
+    /* Click-through tree without JavaScript: only the section the URL points at (#id) is visible. */
+    section { display: none; background: #fff; border: 1px solid #d8dce1; border-radius: 6px; padding: 16px; }
+    section:target, body:not(:has(:target)) #start { display: block; }
+    .choices { display: flex; gap: 10px; flex-wrap: wrap; }
+    .choices a { padding: 8px 16px; border: 1px solid #1b1f24; border-radius: 4px; text-decoration: none; color: inherit; font-weight: 600; }
+    .done { border-left: 6px solid #2e7d32; }
+    .escalate { border-left: 6px solid #c62828; }
+  </style>
+</head>
+<body>
+  <main>
+    <p><a href="index.html">&larr; Northlight Studio</a></p>
+    <h1>No internet</h1>
+
+    <section id="start">
+      <h2>1. Is your computer connected to a network?</h2>
+      <p>Look at the Wi-Fi or network icon at the bottom right. Is Wi-Fi switched on and airplane mode off, or the cable plugged in?</p>
+      <div class="choices"><a href="#phone">Yes, it shows connected</a><a href="#connect">No, it is off or unplugged</a></div>
+    </section>
+
+    <section id="connect">
+      <h2>Switch it on</h2>
+      <p>Turn Wi-Fi on, turn airplane mode off, or plug the cable in firmly. Wait 30 seconds. Can you open a website now?</p>
+      <div class="choices"><a href="#fixed">Yes</a><a href="#phone">No</a></div>
+    </section>
+
+    <section id="phone">
+      <h2>2. Does a phone on the same network get online?</h2>
+      <p>Connect a phone to the same Wi-Fi (with mobile data off) and open a website.</p>
+      <div class="choices"><a href="#router">No, the phone has no internet either</a><a href="#ip">Yes, only my computer has a problem</a></div>
+    </section>
+
+    <section id="router">
+      <h2>3. Restart the router</h2>
+      <p>Unplug the router's power, wait 30 seconds, plug it back in and wait 2 minutes for the lights to settle. Is the internet back?</p>
+      <div class="choices"><a href="#fixed">Yes</a><a href="#isp">No</a></div>
+    </section>
+
+    <section id="isp" class="escalate">
+      <h2>The router or the internet provider is down</h2>
+      <p>Many people are affected, so raise this as P1 in the <a href="helpdesk.html">helpdesk</a> and contact the internet provider. Mention that restarting the router did not help.</p>
+      <div class="choices"><a href="#start">Start again</a></div>
+    </section>
+
+    <section id="ip">
+      <h2>3. Can you open a site by its number?</h2>
+      <p>In your browser, type <strong>https://1.1.1.1</strong> and press Enter. Does a page load?</p>
+      <div class="choices"><a href="#dns">Yes, that works but normal sites do not</a><a href="#restart">No, nothing loads</a></div>
+    </section>
+
+    <section id="dns" class="escalate">
+      <h2>Name lookup (DNS) is failing</h2>
+      <p>The connection works but website names are not being translated. Restart your computer once. If it still fails, raise a ticket in the <a href="helpdesk.html">helpdesk</a> and say "1.1.1.1 loads but websites do not".</p>
+      <div class="choices"><a href="#fixed">Restart fixed it</a><a href="#start">Start again</a></div>
+    </section>
+
+    <section id="restart">
+      <h2>4. Restart your computer, then reconnect to the Wi-Fi</h2>
+      <p>Restart the computer. If it is on Wi-Fi, click the network name, choose Forget, then join it again with the password. Is the internet back?</p>
+      <div class="choices"><a href="#fixed">Yes</a><a href="#ticket">No</a></div>
+    </section>
+
+    <section id="ticket" class="escalate">
+      <h2>Raise a ticket</h2>
+      <p>Open the <a href="helpdesk.html">helpdesk</a> and create a ticket. If you can, run <code>node tools/network-doctor.js</code> and paste its output, including the "First failing step" line.</p>
+      <div class="choices"><a href="#start">Start again</a></div>
+    </section>
+
+    <section id="fixed" class="done">
+      <h2>You are back online</h2>
+      <p>Nothing more to do. If it keeps happening, tell the helpdesk.</p>
+      <div class="choices"><a href="#start">Start again</a></div>
+    </section>
+  </main>
+</body>
+</html>
