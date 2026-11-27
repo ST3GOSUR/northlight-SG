@@ -1,0 +1,28 @@
+{
+  "name": "northlight-studio",
+  "description": "Cloud design for the Northlight Studio site: one resource group holding a Linux web app and a storage account. Costed in cost-estimate.md.",
+  "location": "northeurope",
+  "resources": [
+    {
+      "type": "resourceGroup",
+      "name": "rg-northlight-prod-neu",
+      "tags": { "owner": "studio-it", "env": "prod", "cost-center": "CC-1001" }
+    },
+    {
+      "type": "webApp",
+      "name": "app-northlight-prod-neu",
+      "resourceGroup": "rg-northlight-prod-neu",
+      "sku": "B1",
+      "os": "Linux",
+      "tags": { "owner": "studio-it", "env": "prod", "cost-center": "CC-1001" }
+    },
+    {
+      "type": "storageAccount",
+      "name": "stnorthlightprodneu",
+      "resourceGroup": "rg-northlight-prod-neu",
+      "sku": "Standard_LRS",
+      "accessTier": "Hot",
+      "tags": { "owner": "studio-it", "env": "prod", "cost-center": "CC-1001" }
+    }
+  ]
+}

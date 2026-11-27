@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northlight Settings</title>
+  <link rel="stylesheet" href="helpdesk.css">
+  <style>
+    [hidden] { display: none !important; }
+    table { border-collapse: collapse; width: 100%; background: #fff; }
+    th, td { border: 1px solid #d8dce1; padding: 6px; text-align: left; }
+    h2 { margin-top: 32px; }
+    .note { background: #fff4d6; border: 1px solid #e0b84a; border-radius: 6px; padding: 12px; }
+    .error { color: #b3261e; font-weight: 600; }
+    #msg { min-height: 1.4em; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <main id="settings-page">
+    <p><a href="index.html">&larr; Northlight Studio</a></p>
+    <h1>Settings for <span id="site-name">Northlight Studio</span></h1>
+
+    <h2>Health</h2>
+    <p id="health-error" class="error" role="alert" hidden></p>
+    <table>
+      <tbody>
+        <tr><th>Name</th><td id="h-name">...</td></tr>
+        <tr><th>Version</th><td id="h-version">...</td></tr>
+        <tr><th>Build date</th><td id="h-build">...</td></tr>
+      </tbody>
+    </table>
+    <p>Read from <code>health.json</code>. The build date is written by the deploy workflow each time the site is published.</p>
+
+    <h2>Settings</h2>
+    <table>
+      <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+      <tbody id="config"></tbody>
+    </table>
+    <p>Edit these in <code>config.js</code>.</p>
+
+    <h2>Export all data</h2>
+    <p class="note"><strong>Keep the file private.</strong> It contains every record stored in this browser by this site: tickets, CRM, staff accounts
+      (with password hashes and one-time-code keys), outbox, log and anything you typed into the forms. Nothing is uploaded; the browser just saves the file.
+      Do not commit it to the repository, which is public.</p>
+    <p><button type="button" id="export">Export all data</button></p>
+    <p id="msg" role="status"></p>
+  </main>
+  <script src="config.js"></script>
+  <script src="settings.js"></script>
+</body>
+</html>
