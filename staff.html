@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northlight Staff</title>
+  <link rel="stylesheet" href="helpdesk.css">
+  <style>
+    [hidden] { display: none !important; } /* helpdesk.css sets display on forms, which would override hidden */
+    .note { background: #fff4d6; border: 1px solid #e0b84a; border-radius: 6px; padding: 12px; }
+    table { border-collapse: collapse; width: 100%; background: #fff; margin: 8px 0; }
+    th, td { border: 1px solid #d8dce1; padding: 6px; text-align: left; }
+    #auth-code { font: 700 1.6em ui-monospace, monospace; letter-spacing: .1em; }
+    #msg { min-height: 1.4em; font-weight: 600; }
+    section { margin: 16px 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <p><a href="index.html">&larr; Northlight Studio</a></p>
+    <h1>Staff</h1>
+
+    <p class="note"><strong>This is a learning model.</strong> All people, passwords and codes are fake. Every check runs in your
+      browser, so anyone could bypass it. A real system checks on a server, and its one-time code lives on the user's phone,
+      not on the page.</p>
+
+    <p id="msg" role="status"></p>
+
+    <section>
+      <form id="step1">
+        <h2>Sign in - step 1 of 2: password</h2>
+        <label>Username <input id="username" autocomplete="off" required></label>
+        <label>Password <input id="password" type="password" autocomplete="off" required></label>
+        <button type="submit">Continue</button>
+      </form>
+
+      <form id="step2" hidden>
+        <h2>Sign in - step 2 of 2: one-time code</h2>
+        <label>6-digit code <input id="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" required></label>
+        <button type="submit">Sign in</button>
+        <button type="button" id="cancel">Cancel</button>
+      </form>
+
+      <div id="signed" hidden>
+        <h2>Signed in</h2>
+        <p id="who"></p>
+        <button type="button" id="signout">Sign out</button>
+
+        <section id="admin" hidden>
+          <h2>Admin (IT only)</h2>
+          <table>
+            <thead><tr><th>Name</th><th>Group</th><th>Role</th><th>Status</th><th></th></tr></thead>
+            <tbody id="admin-users"></tbody>
+          </table>
+          <form id="joiner-form">
+            <h3>Joiner</h3>
+            <label>Full name <input id="j-name" maxlength="40" required></label>
+            <label>Group
+              <select id="j-group"><option>Design</option><option>Sales</option><option>IT</option></select>
+            </label>
+            <button type="submit">Joiner</button>
+          </form>
+        </section>
+        <p id="no-admin" hidden>The admin section is for the IT group only.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Demo helpers</h2>
+      <table>
+        <thead><tr><th>Username</th><th>Fake password</th><th>Group, role</th><th>Status</th></tr></thead>
+        <tbody id="demo-users"></tbody>
+      </table>
+      <p>Demo authenticator for
+        <select id="auth-user" aria-label="Authenticator user"></select>:
+        <span id="auth-code">------</span> (changes in <span id="auth-left">30</span> s)</p>
+      <button type="button" id="reset">Reset demo data</button>
+    </section>
+  </main>
+  <script src="staff.js"></script>
+</body>
+</html>
