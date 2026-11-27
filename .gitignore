@@ -1,3 +1,7 @@
 reports/
 /snapshot.json
 .playwright-mcp/
+node_modules/
+test-results/
+playwright-report/
+northlight-export-*.json

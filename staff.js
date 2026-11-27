@@ -56,10 +56,17 @@ async function totp(secretB32, time = Date.now(), digits = 6) {
   return String(n % 10 ** digits).padStart(digits, '0');
 }
 
-// Accepts the previous, current and next 30 s code to allow for clock drift.
+// Accepts the previous, current and next 30 s code to allow for clock drift. Returns the matching time step, or null.
+async function matchTotp(secret, code, time = Date.now()) {
+  for (const d of [-1, 0, 1]) {
+    const t = time + d * STEP_MS;
+    if ((await totp(secret, t)) === code) return Math.floor(t / STEP_MS);
+  }
+  return null;
+}
+
 async function verifyTotp(secret, code, time = Date.now()) {
-  for (const d of [-1, 0, 1]) if ((await totp(secret, time + d * STEP_MS)) === code) return true;
-  return false;
+  return (await matchTotp(secret, code, time)) !== null;
 }
 
 // --- users ---
@@ -76,15 +83,47 @@ async function seedUsers() {
 async function checkPassword(users, username, password) {
   const u = users.find((x) => x.username === username);
   if (!u || (await hashPassword(password, u.salt)) !== u.hash) return { error: 'Wrong username or password.' };
-  if (!u.active) return { error: 'This account has been disabled (leaver). Contact IT.' };
+  if (!u.active) return { error: 'This account has been disabled (leaver). Contact IT.', disabled: true };
   return { user: u };
 }
 
 // Step 2. Checks "active" again: someone may have left between the two steps.
+// A code works once: the time step it belongs to is remembered (user.lastStep), and that step or any older one is refused.
+// The caller must save the user list after a success so the memory survives a reload.
 async function checkCode(user, code, time = Date.now()) {
-  if (!user.active) return { error: 'This account has been disabled (leaver). Contact IT.' };
-  return (await verifyTotp(user.secret, code.trim(), time)) ? { user } : { error: 'Wrong code.' };
+  if (!user.active) return { error: 'This account has been disabled (leaver). Contact IT.', disabled: true };
+  const step = await matchTotp(user.secret, code.trim(), time);
+  if (step === null) return { error: 'Wrong code.' };
+  if (step <= (user.lastStep ?? -1)) return { error: 'That code has already been used. Wait for the next one.' };
+  user.lastStep = step;
+  return { user };
 }
+
+// --- lockout: 5 wrong passwords or codes lock that username for a minute ---
+const MAX_FAILURES = 5;
+const LOCK_MS = 60000;
+const FAIL_WINDOW_MS = 15 * 60000; // failures older than this are forgotten
+const FAILURES_KEY = 'northlight-staff-failures';
+
+// `failures` is { username: { count, last, lockedUntil } }. It counts the name typed, whether or not the account
+// exists, so being locked does not reveal which accounts are real.
+function lockedSeconds(failures, username, now = Date.now()) {
+  const f = failures[username];
+  return f && f.lockedUntil > now ? Math.ceil((f.lockedUntil - now) / 1000) : 0;
+}
+
+function recordFailure(failures, username, now = Date.now()) {
+  const f = failures[username] || { count: 0, last: 0, lockedUntil: 0 };
+  if (now - f.last > FAIL_WINDOW_MS) f.count = 0;
+  f.count += 1;
+  f.last = now;
+  if (f.count >= MAX_FAILURES) { f.count = 0; f.lockedUntil = now + LOCK_MS; }
+  failures[username] = f;
+  const names = Object.keys(failures);
+  if (names.length > 100) for (const n of names) if (n !== username && failures[n].lockedUntil <= now) delete failures[n]; // stay small
+}
+
+const clearFailures = (failures, username) => { delete failures[username]; };
 
 const canAdmin = (u) => !!u && u.active && u.group === 'IT';
 
@@ -190,11 +229,24 @@ if (typeof document !== 'undefined') {
     $('auth-left').textContent = String(30 - (Math.floor(Date.now() / 1000) % 30));
   }
 
+  const loadFailures = () => {
+    try { const f = JSON.parse(localStorage.getItem(FAILURES_KEY)); return f && typeof f === 'object' && !Array.isArray(f) ? f : {}; } catch (e) { return {}; }
+  };
+  const saveFailures = (f) => { try { localStorage.setItem(FAILURES_KEY, JSON.stringify(f)); } catch (e) { /* storage blocked */ } };
+  const lockMessage = (seconds) => `Too many failed attempts. Try again in ${seconds} seconds.`;
+
   $('step1').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const r = await checkPassword(users, $('username').value.trim().toLowerCase(), $('password').value);
+    const username = $('username').value.trim().toLowerCase();
+    const failures = loadFailures();
+    const wait = lockedSeconds(failures, username);
+    if (wait) { $('password').value = ''; return say(lockMessage(wait)); } // refused even if the password would be right
+    const r = await checkPassword(users, username, $('password').value);
     $('password').value = '';
-    if (r.error) return say(r.error);
+    if (r.error) {
+      if (!r.disabled) { recordFailure(failures, username); saveFailures(failures); } // a leaver with the right password is not a failed guess
+      return say(r.error);
+    }
     pending = r.user;
     say('Password accepted. Now enter the code from the authenticator.');
     render();
@@ -203,9 +255,18 @@ if (typeof document !== 'undefined') {
 
   $('step2').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const failures = loadFailures();
+    const wait = lockedSeconds(failures, pending.username);
+    if (wait) { $('code').value = ''; pending = null; render(); return say(lockMessage(wait)); }
     const r = await checkCode(pending, $('code').value);
     $('code').value = '';
-    if (r.error) return say(r.error);
+    if (r.error) {
+      if (!r.disabled) { recordFailure(failures, pending.username); saveFailures(failures); }
+      return say(r.error);
+    }
+    clearFailures(failures, pending.username);
+    saveFailures(failures);
+    save(); // remembers the code just used (user.lastStep)
     setSession(pending.username);
     pending = null;
     say('');
@@ -229,6 +290,7 @@ if (typeof document !== 'undefined') {
   $('reset').addEventListener('click', async () => {
     setSession(null);
     pending = null;
+    try { localStorage.removeItem(FAILURES_KEY); } catch (e) { /* ignore */ } // a reset also lifts any lockout
     users = await seedUsers();
     save();
     say('Demo data reset.');
@@ -245,5 +307,5 @@ if (typeof document !== 'undefined') {
     render();
   })();
 } else {
-  module.exports = { hashPassword, base32decode, totp, verifyTotp, makeUser, seedUsers, checkPassword, checkCode, canAdmin, joiner, leaver, GROUPS };
+  module.exports = { hashPassword, base32decode, totp, matchTotp, verifyTotp, makeUser, seedUsers, checkPassword, checkCode, canAdmin, joiner, leaver, lockedSeconds, recordFailure, clearFailures, MAX_FAILURES, LOCK_MS, GROUPS };
 }

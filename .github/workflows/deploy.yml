@@ -19,8 +19,28 @@ jobs:
       - name: Check the cloud design (names and tags)
         run: node tools/check-cloud.js
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Browser tests (script text, admin section, empty forms, CSP, secrets, accessibility)
+        run: npx playwright test
+      - name: Keep the report if a test failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
   deploy:
-    needs: check # the site only deploys when the checker passed
+    needs: [check, test] # the site only deploys when the cloud check and the browser tests passed
     runs-on: ubuntu-latest
     permissions:
       contents: read

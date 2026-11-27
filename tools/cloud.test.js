@@ -92,7 +92,9 @@ assert.notEqual(JSON.parse(fs.readFileSync(tmp, 'utf8')).buildDate, health.build
 const wf = fs.readFileSync(path.join(root, '.github', 'workflows', 'deploy.yml'), 'utf8');
 assert.match(wf, /jobs:\s*\n\s*check:/);
 assert.match(wf, /run: node tools\/check-cloud\.js/);
-assert.match(wf, /deploy:\s*\n\s*needs: check/);
+assert.match(wf, /deploy:\s*\n\s*needs: \[check, test\]/);
+assert.match(wf, /run: npx playwright test/);
+assert.match(wf, /run: npm ci/);
 assert.ok(wf.indexOf('stamp-health.js') < wf.indexOf('upload-pages-artifact'), 'stamp before upload');
 assert.ok(wf.indexOf('check-cloud.js') < wf.indexOf('deploy-pages'), 'check before deploy');
 assert.match(wf, /branches: \[main\]/);

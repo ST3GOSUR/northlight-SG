@@ -56,5 +56,40 @@ const s = require('./staff.js');
   assert.ok(!s.canAdmin(fay), 'a leaver loses admin');
   await assert.rejects(() => s.joiner(users, fay, 'Late Joiner', 'IT'), /Only IT/);
 
+  
+  // A one-time code works once: its time step is remembered, and that step or any older one is refused
+  const gus = await s.makeUser('gus', 'Gus Test', 'Sales', 'Rep', 'Gus-demo-9', 'JBSWY3DPEHPK3PXP');
+  const T = 1700000000000;
+  const c0 = await s.totp(gus.secret, T);
+  assert.ok((await s.checkCode(gus, c0, T)).user, 'first use works');
+  assert.match((await s.checkCode(gus, c0, T)).error, /already been used/, 'the same code again is refused');
+  assert.match((await s.checkCode(gus, c0, T + 30000)).error, /already been used/, 'and in the next window');
+  assert.ok((await s.checkCode(gus, await s.totp(gus.secret, T + 30000), T + 30000)).user, 'the next code works');
+  assert.match((await s.checkCode(gus, await s.totp(gus.secret, T - 30000), T)).error, /already been used/, 'an older code is refused');
+  assert.equal((await s.checkCode(gus, '000000', T)).error, 'Wrong code.');
+  assert.equal(gus.lastStep, Math.floor((T + 30000) / 30000), 'the step is stored on the user so it can be saved');
+
+  // Lockout: 5 failures lock a username for a minute; others are unaffected; old failures are forgotten
+  const fails = {}; const t0 = 1000000;
+  for (let i = 0; i < 4; i++) s.recordFailure(fails, 'eli', t0 + i);
+  assert.equal(s.lockedSeconds(fails, 'eli', t0 + 10), 0, 'four failures: not locked yet');
+  s.recordFailure(fails, 'eli', t0 + 5);
+  assert.equal(s.lockedSeconds(fails, 'eli', t0 + 6), 60, 'the fifth failure locks for a minute');
+  assert.equal(s.lockedSeconds(fails, 'eli', t0 + 5 + 30000), 30);
+  assert.equal(s.lockedSeconds(fails, 'eli', t0 + 5 + 60000), 0, 'unlocks after a minute');
+  assert.equal(s.lockedSeconds(fails, 'dan', t0 + 6), 0, 'other usernames are not affected');
+  assert.equal(s.lockedSeconds(fails, 'never-seen', t0 + 6), 0);
+  s.recordFailure(fails, 'eli', t0 + 5 + 60001); // the count restarted after the lock
+  assert.equal(s.lockedSeconds(fails, 'eli', t0 + 5 + 60002), 0, 'one failure after a lock does not lock again');
+  s.clearFailures(fails, 'eli');
+  assert.equal(fails.eli, undefined, 'a successful sign-in clears the count');
+  const oldFails = {};
+  for (let i = 0; i < 4; i++) s.recordFailure(oldFails, 'x', t0);
+  s.recordFailure(oldFails, 'x', t0 + 16 * 60000);
+  assert.equal(s.lockedSeconds(oldFails, 'x', t0 + 16 * 60000 + 1), 0, 'failures older than 15 minutes do not add up');
+  const manyFails = {};
+  for (let i = 0; i < 150; i++) s.recordFailure(manyFails, 'user' + i, t0 + i);
+  assert.ok(Object.keys(manyFails).length <= 101, 'the list of failures stays small');
+  assert.equal((await s.checkPassword(users, 'eli', 'Eli-demo-5')).user.username, 'eli');
   console.log('all tests passed');
 })().catch((e) => { console.error(e); process.exit(1); });
