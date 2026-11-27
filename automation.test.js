@@ -138,4 +138,33 @@ const index = fs.readFileSync(__dirname + '/index.html', 'utf8');
 assert.ok(index.indexOf('src="automation.js"') > 0 && index.indexOf('src="automation.js"') < index.indexOf('src="contact.js"'));
 assert.ok(index.includes('href="automation.html"'));
 
+
+// First visit via the form: automation creates the storage, so it leaves markers and the pages add their samples once
+const crmPage = require('./crm.js');
+assert.equal(a.KEYS.ticketsNeedSeed, helpdesk.SEED_PENDING_KEY, 'marker keys match the helpdesk page');
+assert.equal(a.KEYS.crmNeedSeed, crmPage.CRM_SEED_PENDING_KEY, 'marker keys match the CRM page');
+const f1 = fake();
+a.runRules(rules, 'form_sent', normal, f1, 1);
+assert.ok(f1.has(a.KEYS.ticketsNeedSeed) && f1.has(a.KEYS.crmNeedSeed), 'fresh storage gets both markers');
+const f2 = (() => { const m = new Map(); return { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, v), removeItem: (k) => m.delete(k), has: (k) => m.has(k), json: (k) => JSON.parse(m.get(k)) }; })();
+a.runRules(rules, 'form_sent', normal, f2, 1);
+const tk = helpdesk.loadTickets(f2);
+const crmData = crmPage.loadCrm(f2);
+assert.equal(tk.length, 6, 'help desk: the website ticket plus the five training tickets');
+assert.equal(crmData.leads.length, 4, 'CRM: the website lead plus the three sample leads');
+assert.equal(crmData.cases.length, 1, 'CRM: the sample case appears');
+assert.ok(!f2.has(a.KEYS.ticketsNeedSeed) && !f2.has(a.KEYS.crmNeedSeed), 'markers are cleared after the pages load');
+a.runRules(rules, 'form_sent', normal, f2, 2);
+assert.ok(!f2.has(a.KEYS.ticketsNeedSeed) && !f2.has(a.KEYS.crmNeedSeed), 'a second enquiry adds no markers: the storage already exists');
+assert.equal(helpdesk.loadTickets(f2).length, 7);
+// A rule set that only makes tickets never touches the CRM or its marker
+const f3 = fake();
+a.runRules(a.validateRules({ rules: [{ id: 't', when: 'form_sent', action: 'create_ticket' }] }), 'form_sent', normal, f3, 1);
+assert.ok(f3.has(a.KEYS.ticketsNeedSeed) && !f3.has(a.KEYS.crmNeedSeed) && !f3.has(a.KEYS.crm));
+// Existing data (the pages ran first) means no markers
+const f4 = fake();
+f4.setItem(a.KEYS.tickets, '[]'); f4.setItem(a.KEYS.crm, JSON.stringify({ leads: [], accounts: [], contacts: [], opportunities: [], cases: [] }));
+a.runRules(rules, 'form_sent', normal, f4, 1);
+assert.ok(!f4.has(a.KEYS.ticketsNeedSeed) && !f4.has(a.KEYS.crmNeedSeed));
+
 console.log('all tests passed');

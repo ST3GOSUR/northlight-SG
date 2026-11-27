@@ -4,6 +4,8 @@ const KEYS = {
   crm: 'northlight-crm',
   outbox: 'northlight-outbox',
   log: 'northlight-automation-log',
+  ticketsNeedSeed: 'northlight-helpdesk-needs-seed', // markers: "I created this storage, add your sample data once"
+  crmNeedSeed: 'northlight-crm-needs-seed',
 };
 const ACTIONS = ['create_lead', 'create_ticket', 'set_ticket_priority', 'add_outbox'];
 const FIELDS = ['name', 'email', 'message'];
@@ -42,8 +44,9 @@ function containsWord(text, word) {
 
 const fill = (template, vars) => template.replace(/\{(name|email|message|priority)\}/g, (_, k) => vars[k] ?? '');
 
-function readJson(storage, key, fallback, valid) {
+function readJson(storage, key, fallback, valid, onFallback) {
   try { const v = JSON.parse(storage.getItem(key)); if (valid(v)) return v; } catch (e) { /* missing or corrupt: use the fallback */ }
+  if (onFallback) onFallback();
   return fallback();
 }
 const emptyCrm = () => ({ leads: [], accounts: [], contacts: [], opportunities: [], cases: [] });
@@ -83,9 +86,10 @@ const ACTION_FUNCTIONS = {
 
 // Runs every rule for an event, logs one line per rule, then saves. Returns { ticket, lead, lines }.
 function runRules(rules, event, data, storage, now = Date.now()) {
+  const fresh = new Set(); // data we start from nothing: the help desk / CRM pages must still add their samples
   const state = {
-    tickets: readJson(storage, KEYS.tickets, () => [], Array.isArray),
-    crm: readJson(storage, KEYS.crm, emptyCrm, isCrm),
+    tickets: readJson(storage, KEYS.tickets, () => [], Array.isArray, () => fresh.add('tickets')),
+    crm: readJson(storage, KEYS.crm, emptyCrm, isCrm, () => fresh.add('crm')),
     outbox: readJson(storage, KEYS.outbox, () => [], Array.isArray),
     log: readJson(storage, KEYS.log, () => [], Array.isArray),
     dirty: new Set(),
@@ -107,8 +111,8 @@ function runRules(rules, event, data, storage, now = Date.now()) {
 
   // shortcut: no rollback if storage fills up halfway through saving; fine for a learning demo
   const save = (key, value) => storage.setItem(key, JSON.stringify(value));
-  if (state.dirty.has('tickets')) save(KEYS.tickets, state.tickets);
-  if (state.dirty.has('crm')) save(KEYS.crm, state.crm);
+  if (state.dirty.has('tickets')) { save(KEYS.tickets, state.tickets); if (fresh.has('tickets')) storage.setItem(KEYS.ticketsNeedSeed, '1'); }
+  if (state.dirty.has('crm')) { save(KEYS.crm, state.crm); if (fresh.has('crm')) storage.setItem(KEYS.crmNeedSeed, '1'); }
   if (state.dirty.has('outbox')) save(KEYS.outbox, state.outbox);
   save(KEYS.log, [...state.log, ...lines].slice(-LOG_LIMIT));
   return { ticket: ctx.ticket, lead: ctx.lead, lines };

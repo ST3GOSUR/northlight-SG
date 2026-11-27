@@ -31,4 +31,14 @@ for (const page of ['helpdesk.html', 'staff.html', 'troubleshoot.html']) {
   assert.ok(html.includes(`href="${page}"`) && fs.existsSync(__dirname + '/' + page), `link to ${page}`);
 }
 
+// Favicon: the file exists and every page links it, so browsers never fall back to a missing /favicon.ico
+const icon = fs.readFileSync(__dirname + '/favicon.svg', 'utf8');
+assert.ok(icon.startsWith('<svg') && icon.includes('viewBox="0 0 64 64"') && icon.length < 4000, 'favicon.svg is a small SVG');
+const pages = fs.readdirSync(__dirname).filter((n) => n.endsWith('.html'));
+assert.ok(pages.length >= 7, 'found the site pages');
+for (const p of pages) {
+  const count = fs.readFileSync(__dirname + '/' + p, 'utf8').split('<link rel="icon" href="favicon.svg" type="image/svg+xml">').length - 1;
+  assert.equal(count, 1, p + ' links the favicon once');
+}
+
 console.log('all tests passed');

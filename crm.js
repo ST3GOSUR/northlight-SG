@@ -89,18 +89,30 @@ function chartSvg(counts) {
   return s + '</svg>';
 }
 
+// Set by automation.js when the website form created the CRM data before this page ever ran.
+const CRM_SEED_PENDING_KEY = 'northlight-crm-needs-seed';
+
+// Returns the saved CRM data, or null when there is none (the page then seeds).
+function loadCrm(storage) {
+  let s = null;
+  try {
+    const v = JSON.parse(storage.getItem(CRM_KEY));
+    if (v && ['leads', 'accounts', 'contacts', 'opportunities', 'cases'].every((k) => Array.isArray(v[k]))) s = v;
+  } catch (e) { /* missing or corrupt: reseed */ }
+  if (s && storage.getItem(CRM_SEED_PENDING_KEY) !== null) { // add the sample leads and case once, after the website's leads
+    const sample = seed();
+    s = { ...s, leads: [...s.leads, ...sample.leads], cases: [...s.cases, ...sample.cases] };
+    try { storage.setItem(CRM_KEY, JSON.stringify(s)); storage.removeItem(CRM_SEED_PENDING_KEY); } catch (e) { /* keep the marker so it retries */ }
+  }
+  return s;
+}
+
 // --- page ---
 if (typeof document !== 'undefined') {
   const $ = (id) => document.getElementById(id);
   let db;
 
-  const load = () => {
-    try {
-      const s = JSON.parse(localStorage.getItem(CRM_KEY));
-      if (s && ['leads', 'accounts', 'contacts', 'opportunities', 'cases'].every((k) => Array.isArray(s[k]))) return s;
-    } catch (e) { /* missing or corrupt: reseed */ }
-    return null;
-  };
+  const load = () => loadCrm(localStorage);
   const save = () => { try { localStorage.setItem(CRM_KEY, JSON.stringify(db)); } catch (e) { say('Could not save: browser storage is blocked.'); } };
   const say = (t) => { $('msg').textContent = t; };
   const accountName = (id) => (db.accounts.find((a) => a.id === id) || {}).name || '-';
@@ -170,7 +182,10 @@ if (typeof document !== 'undefined') {
       f.reset();
     }, 'Case added.');
   });
-  $('reset').addEventListener('click', () => { db = seed(); save(); say('Demo data reset.'); render(); });
+  $('reset').addEventListener('click', () => {
+    try { localStorage.removeItem(CRM_SEED_PENDING_KEY); } catch (e) { /* ignore */ } // a reset already includes the samples
+    db = seed(); save(); say('Demo data reset.'); render();
+  });
   window.addEventListener('storage', (e) => { if (e.key === CRM_KEY) { db = load() || db; render(); } });
   setInterval(() => { if (!document.activeElement.closest('table')) render(); }, 60 * 1000); // refresh Overdue labels
 
@@ -178,5 +193,5 @@ if (typeof document !== 'undefined') {
   save();
   render();
 } else {
-  module.exports = { seed, addLead, convertLead, setStage, stageCounts, addCase, isOverdue, sortedCases, chartSvg, STAGES, CRM_KEY };
+  module.exports = { seed, addLead, convertLead, setStage, stageCounts, addCase, isOverdue, sortedCases, chartSvg, loadCrm, STAGES, CRM_KEY, CRM_SEED_PENDING_KEY };
 }

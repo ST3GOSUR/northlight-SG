@@ -47,13 +47,24 @@ function seed() {
   return tix;
 }
 
-function load() {
+// Set by automation.js when the website form created the ticket list before this page ever ran.
+const SEED_PENDING_KEY = 'northlight-helpdesk-needs-seed';
+
+function loadTickets(storage) {
+  let saved = null;
   try {
-    const saved = JSON.parse(localStorage.getItem(KEY));
-    if (Array.isArray(saved)) return saved;
+    const s = JSON.parse(storage.getItem(KEY));
+    if (Array.isArray(s)) saved = s;
   } catch (e) { /* corrupt or unavailable storage: fall back to seed */ }
-  return seed();
+  if (!saved) return seed();
+  if (storage.getItem(SEED_PENDING_KEY) !== null) { // add the training tickets once, after the website's tickets
+    saved = [...saved, ...seed()];
+    try { storage.setItem(KEY, JSON.stringify(saved)); storage.removeItem(SEED_PENDING_KEY); } catch (e) { /* keep the marker so it retries */ }
+  }
+  return saved;
 }
+
+function load() { return loadTickets(localStorage); }
 
 function save() {
   try { localStorage.setItem(KEY, JSON.stringify(tickets)); } catch (e) { /* storage full or blocked */ }
@@ -142,5 +153,5 @@ if (typeof document !== 'undefined') {
     URL.revokeObjectURL(url);
   });
 } else {
-  module.exports = { priorityOf, isOverdue, overdueBy, fmtDuration, addReply, makeTicket, sorted };
+  module.exports = { priorityOf, isOverdue, overdueBy, fmtDuration, addReply, makeTicket, sorted, loadTickets, SEED_PENDING_KEY };
 }

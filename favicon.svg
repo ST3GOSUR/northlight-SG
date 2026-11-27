@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b1b33"/>
+      <stop offset="1" stop-color="#17365a"/>
+    </linearGradient>
+    <linearGradient id="aurora" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2af0c0"/>
+      <stop offset="1" stop-color="#8a7bff"/>
+    </linearGradient>
+    <clipPath id="tile"><rect width="64" height="64" rx="14"/></clipPath>
+  </defs>
+  <g clip-path="url(#tile)">
+    <rect width="64" height="64" fill="url(#sky)"/>
+    <circle cx="44" cy="10" r="1.4" fill="#fff"/>
+    <circle cx="31" cy="7" r="1" fill="#fff" opacity=".8"/>
+    <path d="M18 9 L19.8 14.2 L25 16 L19.8 17.8 L18 23 L16.2 17.8 L11 16 L16.2 14.2Z" fill="#fff"/>
+    <path d="M0 42 C10 16 22 48 34 26 S54 6 64 20 V64 H0Z" fill="url(#aurora)"/>
+    <path d="M0 54 C14 36 28 60 42 42 S58 36 64 40 V64 H0Z" fill="#14b8a6" opacity=".55"/>
+  </g>
+</svg>

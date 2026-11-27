@@ -32,4 +32,24 @@ assert.equal(old.replies.length, 1);
 const order = h.sorted([at(1, 1, 1), at(3, 3, 1), at(3, 3, 5)]);
 assert.deepEqual(order.map(x => x.priority), ['P1', 'P1', 'P3']);
 assert.ok(order[0].created < order[1].created);
+
+// Loading: the website form may have created the list first (marker set); training tickets are added once, after it
+const mem = (init = {}) => { const m = new Map(Object.entries(init)); return { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, v), removeItem: (k) => m.delete(k), has: (k) => m.has(k), json: (k) => JSON.parse(m.get(k)) }; };
+const TK = 'northlight-helpdesk-tickets';
+assert.equal(h.loadTickets(mem()).length, 5, 'empty storage gives the five training tickets');
+assert.equal(h.loadTickets(mem({ [TK]: 'not json' })).length, 5, 'corrupt storage falls back to the training tickets');
+const own = JSON.stringify([{ id: 1, requester: 'Web Visitor (w@example.com)', priority: 'P3', status: 'New', created: 1, issue: 'x', replies: [] }]);
+let st = mem({ [TK]: own });
+assert.equal(h.loadTickets(st).length, 1, 'no marker: stored tickets are left alone');
+st = mem({ [TK]: own, [h.SEED_PENDING_KEY]: '1' });
+let loaded = h.loadTickets(st);
+assert.equal(loaded.length, 6, 'marker: website ticket plus five training tickets');
+assert.equal(loaded[0].requester, 'Web Visitor (w@example.com)', 'the website ticket stays first');
+assert.equal(st.json(TK).length, 6, 'merged list is saved');
+assert.ok(!st.has(h.SEED_PENDING_KEY), 'marker is cleared');
+assert.equal(h.loadTickets(st).length, 6, 'loading again does not add the training tickets twice');
+const failing = { ...mem({ [TK]: own, [h.SEED_PENDING_KEY]: '1' }), setItem: () => { throw new Error('full'); } };
+assert.equal(h.loadTickets(failing).length, 6, 'a failed save still shows the merged list');
+assert.ok(failing.has(h.SEED_PENDING_KEY), 'and keeps the marker so the next load retries');
+
 console.log('all tests passed');

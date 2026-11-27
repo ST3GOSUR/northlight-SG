@@ -78,4 +78,22 @@ const used = new Set([...js.matchAll(/\$\('([\w-]+)'\)/g)].map((m) => m[1]).conc
 for (const id of used) assert.ok(html.includes(`id="${id}"`), `missing id ${id}`);
 assert.ok(fs.readFileSync(__dirname + '/index.html', 'utf8').includes('href="crm.html"'), 'index.html links to crm.html');
 
+
+// Loading: the website form may have created the CRM data first (marker set); samples are added once, after it
+const mem = (init = {}) => { const m = new Map(Object.entries(init)); return { getItem: (k) => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, v), removeItem: (k) => m.delete(k), has: (k) => m.has(k), json: (k) => JSON.parse(m.get(k)) }; };
+assert.equal(c.loadCrm(mem()), null, 'no data: the page seeds itself');
+assert.equal(c.loadCrm(mem({ [c.CRM_KEY]: '{{oops' })), null, 'corrupt data: the page seeds itself');
+const webLead = { id: 'w1', name: 'Web Visitor', company: '(not given)', email: 'w@example.com', converted: false, source: 'website' };
+const stored = JSON.stringify({ leads: [webLead], accounts: [], contacts: [], opportunities: [], cases: [] });
+let cs = mem({ [c.CRM_KEY]: stored });
+assert.equal(c.loadCrm(cs).leads.length, 1, 'no marker: stored data is left alone');
+cs = mem({ [c.CRM_KEY]: stored, [c.CRM_SEED_PENDING_KEY]: '1' });
+const merged = c.loadCrm(cs);
+assert.equal(merged.leads.length, 4, 'marker: website lead plus the three sample leads');
+assert.equal(merged.leads[0].name, 'Web Visitor', 'the website lead stays first');
+assert.equal(merged.cases.length, 1, 'and the sample case');
+assert.equal(cs.json(c.CRM_KEY).leads.length, 4, 'merged data is saved');
+assert.ok(!cs.has(c.CRM_SEED_PENDING_KEY), 'marker is cleared');
+assert.equal(c.loadCrm(cs).leads.length, 4, 'loading again does not add the samples twice');
+
 console.log('all tests passed');
