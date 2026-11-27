@@ -48,10 +48,24 @@ assert.equal(lib.judgeRouter('192.168.1.1', false, true).status, 'SKIP');
 assert.equal(lib.judgeRouter('192.168.1.1', false, false).status, 'FAIL');
 assert.equal(lib.judgeRouter(null, false, false).status, 'FAIL');
 
+// step 1 Look and step 2 Address
+assert.equal(lib.judgeLook([]).status, 'FAIL');
+assert.equal(lib.judgeLook(['192.168.1.20']).status, 'PASS');
+assert.equal(lib.judgeAddress(['192.168.1.20']).status, 'PASS');
+assert.equal(lib.judgeAddress(['169.254.7.8']).status, 'FAIL');
+assert.match(lib.judgeAddress(['169.254.7.8']).detail, /169\.254/);
+assert.equal(lib.judgeAddress(['169.254.7.8', '10.0.0.5']).status, 'PASS'); // one real address is enough
+assert.equal(lib.judgeAddress([]).status, 'FAIL');
+assert.equal(lib.parseDefaultRoute(route).ip, '192.168.1.20');                         // Wi-Fi's own address, not the VPN's
+assert.equal(lib.judgeAddress(['26.75.204.167', '192.168.1.20'], '192.168.1.20').detail, '192.168.1.20');
+
 // first failing step
 const steps = [lib.result('Router', 'PASS', ''), lib.result('Internet', 'FAIL', ''), lib.result('Website', 'FAIL', '')];
 assert.equal(lib.firstFailure(steps).name, 'Internet');
 assert.equal(lib.firstFailure([lib.result('Router', 'PASS', '')]), null);
 assert.equal(lib.formatLine(lib.result('Router', 'PASS', '192.168.1.1 answers')), 'PASS  Router: 192.168.1.1 answers');
+
+// dated report file name (local time, zero-padded)
+assert.equal(lib.reportFileName('pc-health', new Date(2026, 0, 5, 9, 7)), 'pc-health-2026-01-05-0907.txt');
 
 console.log('all tests passed');

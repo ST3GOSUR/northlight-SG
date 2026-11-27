@@ -185,6 +185,7 @@ if (typeof document !== 'undefined') {
   async function tick() {
     const u = users.find((x) => x.username === $('auth-user').value);
     if (!u) return;
+    $('auth-secret').textContent = u.secret;
     $('auth-code').textContent = await totp(u.secret);
     $('auth-left').textContent = String(30 - (Math.floor(Date.now() / 1000) % 30));
   }

@@ -14,20 +14,37 @@ function isOverdue(t, now = Date.now()) {
   return t.status !== 'Resolved' && now > t.created + TARGET_HOURS[t.priority] * HOUR;
 }
 
+// Milliseconds past the response target, or 0 if not overdue.
+function overdueBy(t, now = Date.now()) {
+  return isOverdue(t, now) ? now - (t.created + TARGET_HOURS[t.priority] * HOUR) : 0;
+}
+
+function fmtDuration(ms) {
+  const m = Math.floor(ms / 60000);
+  return m >= 60 ? Math.floor(m / 60) + 'h ' + (m % 60) + 'm' : m + 'm';
+}
+
+function addReply(t, author, text, time = Date.now()) {
+  (t.replies = t.replies || []).push({ author, text, time }); // old saved tickets have no replies yet
+}
+
 function makeTicket(requester, issue, impact, urgency, created = Date.now(), status = 'New') {
-  return { id: created + Math.random(), requester, issue, impact, urgency, priority: priorityOf(impact, urgency), status, created };
+  return { id: created + Math.random(), requester, issue, impact, urgency, priority: priorityOf(impact, urgency), status, created, replies: [] };
 }
 
 // Fake data, created relative to now so some are overdue.
 function seed() {
   const now = Date.now();
-  return [
-    makeTicket('Alice Example', 'Cannot log in to the design file server', 3, 3, now - 2 * HOUR),
-    makeTicket('Bob Sample', 'Printer on floor 2 jams on A3 paper', 2, 2, now - 1 * HOUR, 'In progress'),
-    makeTicket('Carol Test', 'Request a second monitor', 1, 1, now - 3 * HOUR),
-    makeTicket('Dan Demo', 'Font licence expired on three laptops', 2, 3, now - 6 * HOUR, 'In progress'),
-    makeTicket('Eve Placeholder', 'Wi-Fi slow in meeting room', 1, 2, now - 30 * HOUR, 'Resolved'),
+  // Rubric: P1 many people/money/security at risk now; P2 one person blocked or a deadline; P3 annoying, work continues.
+  const tix = [
+    makeTicket('Studio director', "I can't open my email and my client meeting starts in 30 minutes.", 2, 2, now - 5 * 60000),
+    makeTicket('Designer', 'The second-floor printer prints blank pages.', 1, 1, now - 2 * HOUR),
+    makeTicket('HR', 'New starter Maya begins Monday. She needs a laptop and accounts.', 1, 2, now - 1 * HOUR),
+    makeTicket('Finance', 'Three of us got an invoice email with an attachment. One person opened it.', 3, 3, now - 2 * HOUR),
+    makeTicket('Account manager', 'Wi-Fi is slow in the meeting room.', 1, 1, now - 3 * HOUR),
   ];
+  addReply(tix[3], 'Support', 'Isolating the affected laptop and checking the attachment.', now - 20 * 60000);
+  return tix;
 }
 
 function load() {
@@ -57,13 +74,34 @@ if (typeof document !== 'undefined') {
     return e;
   }
 
+  function replyHistory(t) {
+    const box = el('div', undefined, 'replies');
+    box.append(el('strong', 'Replies (' + (t.replies || []).length + ')'));
+    const ul = el('ul');
+    for (const r of t.replies || []) {
+      ul.append(el('li', r.author + ' · ' + new Date(r.time).toLocaleString() + ': ' + r.text));
+    }
+    const f = el('form', undefined, 'reply-form');
+    const who = el('input'); who.placeholder = 'Name'; who.required = true; who.maxLength = 60;
+    const txt = el('input'); txt.placeholder = 'Reply'; txt.required = true; txt.maxLength = 300;
+    f.append(who, txt, el('button', 'Reply'));
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      addReply(t, who.value.trim(), txt.value.trim());
+      save();
+      render();
+    });
+    box.append(ul, f);
+    return box;
+  }
+
   function render() {
     listEl.replaceChildren();
     for (const t of sorted(tickets)) {
       const li = el('li', undefined, t.priority + ' ' + t.status);
       const head = el('div');
       head.append(el('span', t.priority, 'badge'), el('strong', t.issue));
-      if (isOverdue(t)) head.append(el('span', 'Overdue', 'overdue'));
+      if (isOverdue(t)) head.append(el('span', 'Overdue ' + fmtDuration(overdueBy(t)), 'overdue'));
       const due = new Date(t.created + TARGET_HOURS[t.priority] * HOUR);
       li.append(
         head,
@@ -77,7 +115,7 @@ if (typeof document !== 'undefined') {
         sel.append(o);
       }
       sel.addEventListener('change', () => { t.status = sel.value; save(); render(); });
-      li.append(sel);
+      li.append(sel, replyHistory(t));
       listEl.append(li);
     }
   }
@@ -92,7 +130,17 @@ if (typeof document !== 'undefined') {
   });
 
   render();
-  setInterval(render, 60 * 1000); // refresh Overdue labels
+  // Refresh Overdue labels, but not while someone is typing in the list.
+  setInterval(() => { if (!listEl.contains(document.activeElement)) render(); }, 60 * 1000);
+
+  document.getElementById('export').addEventListener('click', () => {
+    const url = URL.createObjectURL(new Blob([JSON.stringify(tickets, null, 2)], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'helpdesk-tickets.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
 } else {
-  module.exports = { priorityOf, isOverdue, makeTicket, sorted };
+  module.exports = { priorityOf, isOverdue, overdueBy, fmtDuration, addReply, makeTicket, sorted };
 }

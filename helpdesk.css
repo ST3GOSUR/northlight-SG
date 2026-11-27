@@ -13,3 +13,8 @@ li.Resolved { opacity: .6; }
 .meta { font-size: .9em; color: #555; margin: 4px 0; }
 .badge { font-weight: 700; margin-right: 6px; }
 .overdue { background: #c62828; color: #fff; font-size: .8em; font-weight: 700; padding: 2px 6px; border-radius: 3px; margin-left: 6px; }
+.replies { margin-top: 8px; font-size: .9em; }
+.replies ul { margin: 4px 0; gap: 4px; }
+.replies li { border: 0; border-left: 2px solid #d8dce1; border-radius: 0; padding: 2px 8px; background: none; }
+.reply-form { display: flex; gap: 6px; }
+.reply-form input:last-of-type { flex: 1; }

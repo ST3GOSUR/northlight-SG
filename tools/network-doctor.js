@@ -1,5 +1,6 @@
-// READ-ONLY network doctor. Run: node tools/network-doctor.js
-// Checks the router, then 1.1.1.1, then a website name, and names the first failing step. Changes no setting.
+// READ-ONLY network doctor. Run: node tools/network-doctor.js [--save]  (--save also writes a dated file in reports/)
+// Follows the ladder: 1 Look, 2 Address, 3 Ping router, 4 Ping outside, 5 Ping a name. Names the first failing step.
+const os = require('os');
 const { execFileSync, spawnSync } = require('child_process');
 const dns = require('dns').promises;
 const lib = require('./lib');
@@ -15,25 +16,35 @@ function ping(host) {
 }
 
 async function main() {
-  const routeText = execFileSync('route', ['print', '-4'], { encoding: 'utf8' });
-  const gateway = lib.parseDefaultGateway(routeText);
-
+  const addresses = Object.values(os.networkInterfaces()).flat()
+    .filter((i) => i.family === 'IPv4' && !i.internal).map((i) => i.address);
+  const route = lib.parseDefaultRoute(execFileSync('route', ['print', '-4'], { encoding: 'utf8' }));
+  const gateway = route && route.gateway;
   const routerOk = gateway ? ping(gateway) : false;
   const internetOk = ping('1.1.1.1');
-  const results = [
-    lib.judgeRouter(gateway, routerOk, internetOk),
-    lib.result('Internet (1.1.1.1)', internetOk ? 'PASS' : 'FAIL', internetOk ? 'reachable' : 'not reachable'),
-  ];
+
+  let nameResult;
   try {
     const { address } = await dns.lookup(SITE);
-    results.push(lib.result(`Website name (${SITE})`, 'PASS', `resolves to ${address}`));
+    nameResult = lib.result(`Ping a name (${SITE})`, 'PASS', `resolves to ${address}`);
   } catch (e) {
-    results.push(lib.result(`Website name (${SITE})`, 'FAIL', 'name does not resolve'));
+    nameResult = lib.result(`Ping a name (${SITE})`, 'FAIL', 'name does not resolve - suspect DNS');
   }
 
-  results.forEach((r) => console.log(lib.formatLine(r)));
+  const results = [
+    lib.judgeLook(addresses),
+    lib.judgeAddress(addresses, route && route.ip),
+    lib.judgeRouter(gateway, routerOk, internetOk),
+    lib.result('Ping outside (1.1.1.1)', internetOk ? 'PASS' : 'FAIL', internetOk ? 'works, the link is fine' : 'not reachable'),
+    nameResult,
+  ].map((r, i) => ({ ...r, name: `${i + 1} ${r.name}` }));
+
   const bad = lib.firstFailure(results);
-  console.log(bad ? `\nFirst failing step: ${bad.name}` : '\nAll steps passed.');
+  lib.printAndMaybeSave('network-doctor', [
+    ...results.map(lib.formatLine),
+    '',
+    bad ? `First failing step: ${bad.name}` : 'All steps passed.',
+  ]);
   process.exitCode = bad ? 1 : 0;
 }
 

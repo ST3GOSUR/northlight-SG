@@ -41,6 +41,7 @@ const s = require('./staff.js');
   assert.equal(zed.username, 'zedtest');
   assert.ok((await s.checkPassword(users, 'zedtest', password)).user);
   assert.ok((await s.checkCode(zed, await s.totp(zed.secret))).user);
+  assert.ok(!JSON.stringify(zed).includes(password), 'joiner password not stored in plain text');
   await assert.rejects(() => s.joiner(users, eli, 'Zed Test', 'Sales'), /already exists/);
   await assert.rejects(() => s.joiner(users, eli, '!!!', 'Sales'), /Enter a name/);
   await assert.rejects(() => s.joiner(users, eli, 'Q', 'Admins'), /Unknown group/);

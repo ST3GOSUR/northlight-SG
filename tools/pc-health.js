@@ -1,4 +1,4 @@
-// READ-ONLY PC health report. Run: node tools/pc-health.js
+// READ-ONLY PC health report. Run: node tools/pc-health.js [--save]  (--save also writes a dated file in reports/)
 // Only reads: Node's own OS and disk info, plus two read-only PowerShell queries. Changes no setting.
 const os = require('os');
 const fs = require('fs');
@@ -27,5 +27,5 @@ const results = [
     ps("Get-HotFix | Where-Object InstalledOn | Sort-Object InstalledOn -Descending | Select-Object -First 1 | ForEach-Object { $_.InstalledOn.ToString('yyyy-MM-dd') }"))),
 ];
 
-results.forEach((r) => console.log(lib.formatLine(r)));
+lib.printAndMaybeSave('pc-health', results.map(lib.formatLine));
 process.exitCode = results.some((r) => r.status === 'FAIL') ? 1 : 0;
