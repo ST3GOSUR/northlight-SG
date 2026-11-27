@@ -1,0 +1,15 @@
+body { font-family: system-ui, sans-serif; margin: 0; background: #f6f7f9; color: #1b1f24; }
+main { max-width: 720px; margin: 0 auto; padding: 16px; }
+form { display: grid; gap: 10px; background: #fff; padding: 16px; border: 1px solid #d8dce1; border-radius: 6px; }
+label { display: grid; gap: 4px; font-weight: 600; }
+input, textarea, select, button { font: inherit; padding: 6px; }
+button { cursor: pointer; }
+ul { list-style: none; padding: 0; display: grid; gap: 10px; }
+li { background: #fff; border: 1px solid #d8dce1; border-left-width: 6px; border-radius: 6px; padding: 12px; }
+li.P1 { border-left-color: #c62828; }
+li.P2 { border-left-color: #ef8f00; }
+li.P3 { border-left-color: #2e7d32; }
+li.Resolved { opacity: .6; }
+.meta { font-size: .9em; color: #555; margin: 4px 0; }
+.badge { font-weight: 700; margin-right: 6px; }
+.overdue { background: #c62828; color: #fff; font-size: .8em; font-weight: 700; padding: 2px 6px; border-radius: 3px; margin-left: 6px; }
