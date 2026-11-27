@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northlight CRM</title>
+  <link rel="stylesheet" href="helpdesk.css">
+  <style>
+    [hidden] { display: none !important; }
+    .scroll { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; background: #fff; min-width: 460px; }
+    th, td { border: 1px solid #d8dce1; padding: 6px; text-align: left; vertical-align: top; }
+    h2 { margin-top: 32px; }
+    #msg { min-height: 1.4em; font-weight: 600; }
+    .note { background: #fff4d6; border: 1px solid #e0b84a; border-radius: 6px; padding: 12px; }
+  </style>
+</head>
+<body>
+  <main>
+    <p><a href="index.html">&larr; Northlight Studio</a></p>
+    <h1>CRM</h1>
+    <p class="note">All people and companies here are fake. Data is stored only in this browser (localStorage).</p>
+    <p id="msg" role="status"></p>
+
+    <h2>Leads</h2>
+    <div class="scroll"><table><thead><tr><th>Name</th><th>Company</th><th>Email</th><th></th></tr></thead><tbody id="leads"></tbody></table></div>
+    <form id="lead-form">
+      <h3>Add a lead</h3>
+      <label>Name <input name="name" maxlength="60"></label>
+      <label>Company <input name="company" maxlength="60"></label>
+      <label>Email <input name="email" type="email" maxlength="100"></label>
+      <button type="submit">Add lead</button>
+    </form>
+
+    <h2>Accounts</h2>
+    <div class="scroll"><table><thead><tr><th>Account</th><th>Contacts</th><th>Opportunities</th></tr></thead><tbody id="accounts"></tbody></table></div>
+
+    <h2>Contacts</h2>
+    <div class="scroll"><table><thead><tr><th>Name</th><th>Email</th><th>Account</th></tr></thead><tbody id="contacts"></tbody></table></div>
+
+    <h2>Opportunities</h2>
+    <div class="scroll"><table><thead><tr><th>Opportunity</th><th>Account</th><th>Stage</th></tr></thead><tbody id="opps"></tbody></table></div>
+    <h3>Opportunities by stage</h3>
+    <div id="chart"></div>
+
+    <h2>Support cases</h2>
+    <div class="scroll"><table><thead><tr><th>Subject</th><th>Account</th><th>Priority</th><th>Due</th><th></th></tr></thead><tbody id="cases"></tbody></table></div>
+    <form id="case-form">
+      <h3>Add a case</h3>
+      <label>Subject <input name="subject" maxlength="100"></label>
+      <label>Account <select name="account" id="c-account"></select></label>
+      <label>Priority <select name="priority"><option>P1</option><option selected>P2</option><option>P3</option></select></label>
+      <label>Due <input name="due" type="datetime-local"></label>
+      <button type="submit">Add case</button>
+    </form>
+
+    <p><button type="button" id="reset">Reset demo data</button></p>
+  </main>
+  <script src="crm.js"></script>
+</body>
+</html>
