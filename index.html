@@ -3,13 +3,114 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Northlight Studio</title>
+  <title>Northlight Studio - 25-person design studio</title>
+  <meta name="description" content="Northlight Studio is a 25-person design studio. We create brand identity, web and digital design, and print for growing companies.">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; margin: 0; color: #14202e; background: #f6f8fb; line-height: 1.55; }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
+    header { background: #0b1b33; color: #fff; }
+    header .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 16px; }
+    .brand { font-weight: 700; font-size: 1.15rem; padding: 12px 0; }
+    nav { display: flex; flex-wrap: wrap; }
+    nav a { color: #fff; text-decoration: none; padding: 12px 10px; min-height: 44px; }
+    nav a:hover, nav a:focus { text-decoration: underline; }
+    .hero img { width: 100%; height: auto; display: block; border-radius: 8px; margin-top: 16px; }
+    h1 { font-size: clamp(1.7rem, 6vw, 2.5rem); line-height: 1.2; margin: 20px 0 8px; }
+    h2 { margin: 40px 0 12px; }
+    .services { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .card { background: #fff; border: 1px solid #d8dfe8; border-radius: 8px; padding: 16px; }
+    .card h3 { margin-top: 0; }
+    details { background: #fff; border: 1px solid #d8dfe8; border-radius: 8px; padding: 4px 16px; margin-bottom: 8px; }
+    summary { cursor: pointer; font-weight: 600; padding: 10px 0; min-height: 44px; }
+    form { background: #fff; border: 1px solid #d8dfe8; border-radius: 8px; padding: 16px; display: grid; gap: 14px; }
+    label { display: grid; gap: 4px; font-weight: 600; }
+    input, textarea, button { font: inherit; font-size: 1rem; padding: 10px; border-radius: 6px; border: 1px solid #8793a3; }
+    input[aria-invalid="true"], textarea[aria-invalid="true"] { border: 2px solid #b3261e; }
+    button { background: #0b1b33; color: #fff; border-color: #0b1b33; cursor: pointer; min-height: 44px; }
+    .error { color: #b3261e; font-weight: 600; margin: 0; }
+    .ok { color: #1b6e2b; font-weight: 600; }
+    #form-status { margin: 0; }
+    footer { margin: 40px 0 24px; font-size: .9rem; color: #4a5766; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "How big is the studio?",
+        "acceptedAnswer": { "@type": "Answer", "text": "We are 25 people: designers, strategists and producers who work together on every project." } },
+      { "@type": "Question", "name": "How long does a project take?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A brand identity usually takes 6 to 8 weeks and a website 8 to 12 weeks. We agree a timeline before we start." } },
+      { "@type": "Question", "name": "How do we get started?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Send us a message with the contact form. We reply within one working day and arrange a short call." } },
+      { "@type": "Question", "name": "Can you work with our existing brand?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. We can extend an existing brand into new products, pages and print, or refresh it step by step." } }
+    ]
+  }
+  </script>
 </head>
 <body>
-  <main>
-    <h1>Northlight Studio</h1>
-    <p>Northlight Studio is a 25-person design studio. We make clear, considered work for brands and products.</p>
-    <p><a href="helpdesk.html">Helpdesk</a></p>
+  <header>
+    <div class="wrap">
+      <a class="brand" href="index.html" style="color:#fff;text-decoration:none">Northlight Studio</a>
+      <nav aria-label="Main">
+        <a href="#services">Services</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+        <a href="helpdesk.html">Helpdesk</a>
+        <a href="staff.html">Staff</a>
+        <a href="troubleshoot.html">Troubleshooting</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>Northlight Studio: clear, considered design</h1>
+      <p>We are a 25-person design studio. We help growing companies look and sound like themselves, in print and on screen.</p>
+      <img src="northlight.svg" width="800" height="300" alt="Abstract illustration of northern lights over a dark sky">
+    </section>
+
+    <section id="services">
+      <h2>Services</h2>
+      <div class="services">
+        <article class="card"><h3>Brand identity</h3><p>Logos, colour, type and the rules that keep your brand consistent everywhere.</p></article>
+        <article class="card"><h3>Web and digital design</h3><p>Fast, accessible websites and product screens that work well on phones first.</p></article>
+        <article class="card"><h3>Print and packaging</h3><p>Brochures, reports and packaging that feel as good in the hand as they look.</p></article>
+      </div>
+    </section>
+
+    <section id="faq">
+      <h2>Frequently asked questions</h2>
+      <details><summary>How big is the studio?</summary><p>We are 25 people: designers, strategists and producers who work together on every project.</p></details>
+      <details><summary>How long does a project take?</summary><p>A brand identity usually takes 6 to 8 weeks and a website 8 to 12 weeks. We agree a timeline before we start.</p></details>
+      <details><summary>How do we get started?</summary><p>Send us a message with the contact form. We reply within one working day and arrange a short call.</p></details>
+      <details><summary>Can you work with our existing brand?</summary><p>Yes. We can extend an existing brand into new products, pages and print, or refresh it step by step.</p></details>
+    </section>
+
+    <section id="contact">
+      <h2>Contact us</h2>
+      <form id="contact-form" novalidate>
+        <label>Your name
+          <input name="name" autocomplete="name" maxlength="60" aria-describedby="name-error">
+          <span class="error" id="name-error" role="alert" hidden></span>
+        </label>
+        <label>Email address
+          <input name="email" type="email" autocomplete="email" maxlength="100" aria-describedby="email-error">
+          <span class="error" id="email-error" role="alert" hidden></span>
+        </label>
+        <label>Message
+          <textarea name="message" rows="5" maxlength="1000" aria-describedby="message-error"></textarea>
+          <span class="error" id="message-error" role="alert" hidden></span>
+        </label>
+        <button type="submit">Send message</button>
+        <p id="form-status" role="status"></p>
+      </form>
+    </section>
+
+    <footer>All names and content on this site are fictional. The contact form creates a ticket in the <a href="helpdesk.html">helpdesk</a>, stored only in your browser.</footer>
   </main>
+  <script src="contact.js"></script>
 </body>
 </html>

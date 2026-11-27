@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" role="img" aria-label="Abstract northern lights over a dark sky">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1b33"/><stop offset="1" stop-color="#16314f"/></linearGradient>
+    <linearGradient id="a" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#18b9a4" stop-opacity=".9"/><stop offset="1" stop-color="#6c8cff" stop-opacity=".6"/></linearGradient>
+  </defs>
+  <rect width="800" height="300" fill="url(#sky)"/>
+  <path d="M0 190 C150 90 260 230 400 140 S650 70 800 150 L800 300 L0 300Z" fill="url(#a)" opacity=".55"/>
+  <path d="M0 230 C180 150 300 270 450 190 S680 130 800 200 L800 300 L0 300Z" fill="#18b9a4" opacity=".35"/>
+  <circle cx="120" cy="60" r="2" fill="#fff"/><circle cx="300" cy="40" r="1.5" fill="#fff"/><circle cx="560" cy="55" r="2" fill="#fff"/><circle cx="700" cy="30" r="1.5" fill="#fff"/>
+</svg>
