@@ -1,0 +1,157 @@
+/* Field Journal: the look shared by every page (see ui-prompt.md).
+   Snow paper, ink and expedition red. Georgia for reading, system sans for labels, buttons, tables and fields.
+   No inline styles and no outside files: the content security policy allows neither. */
+
+:root {
+  --paper: #F4F1E8;
+  --ink: #1B2A3A;
+  --red: #A8322A;
+  --ice: #9CC3D9;
+  --tape: rgba(224, 205, 150, .78);
+  --note: #FBF3D0;
+  --card: #FFFFFF;
+  --muted: #4A5968;
+  --good: #2F6B3F;
+  --line: rgba(27, 42, 58, .28);
+  --serif: Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { font-size: 112.5%; scroll-behavior: smooth; scroll-padding-top: 16px; } /* 1rem = 18px */
+html { overflow-x: clip; }
+body {
+  margin: 0; color: var(--ink); font-family: var(--serif); line-height: 1.65; overflow-x: clip;
+  background: var(--paper) repeating-linear-gradient(transparent 0 31px, rgba(27, 42, 58, .07) 31px 32px);
+}
+[hidden] { display: none !important; }
+
+/* Type: headings grow by 1.25 per step from 23px: 23, 28, 35, 44. */
+h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.15; margin: 1.2em 0 .4em; }
+h1 { font-size: clamp(2rem, 6vw + .3rem, 2.44rem); margin-top: .4em; }
+h2 { font-size: clamp(1.5rem, 4vw + .5rem, 1.95rem); }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+.tool h1 { font-style: italic; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+.tool h2 { font-size: 1.56rem; margin-top: 1.8em; padding-bottom: 4px; border-bottom: 1px solid var(--line); }
+.tool h3 { font-size: 1.25rem; }
+.small { font-size: .833rem; }
+code { font: .833rem ui-monospace, Consolas, "Courier New", monospace; background: rgba(27, 42, 58, .08); padding: 1px 6px; border-radius: 3px; }
+
+a { color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+a:hover { color: var(--ink); }
+:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+
+/* Masthead: the same on every page */
+.mast { background: var(--paper); border-bottom: 6px double var(--ink); text-align: center; }
+.mast-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 16px; max-width: 1080px; margin: 0 auto; padding: 14px 20px 2px; font: 700 .833rem var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.mast-title { margin: 4px 0 8px; font: 700 clamp(1.7rem, 5.4vw, 3.4rem)/1.05 var(--serif); letter-spacing: .04em; text-transform: uppercase; }
+.mast-title a { color: var(--ink); text-decoration: none; }
+
+/* Navigation: a sticky bar that always lists every page. The home page adds a second row for its sections. */
+.skip { position: absolute; left: 12px; top: -90px; z-index: 100; padding: 12px 18px; background: var(--ink); color: #fff; font: 700 .89rem var(--sans); text-decoration: none; }
+.skip:focus { top: 12px; color: #fff; }
+.bar { position: sticky; top: 0; z-index: 30; background: var(--paper); border-bottom: 2px solid var(--ink); transition: box-shadow .2s; }
+.bar.is-stuck { box-shadow: 0 8px 0 rgba(27, 42, 58, .1); }
+.bar-main { display: flex; align-items: center; justify-content: center; gap: 0 4px; max-width: 1080px; margin: 0 auto; padding: 0 12px; }
+.bar-brand { display: none; align-items: center; gap: 8px; margin-right: auto; min-height: 44px; font: 700 1.05rem var(--serif); color: var(--ink); text-decoration: none; white-space: nowrap; }
+.bar-brand svg { color: var(--red); }
+.bar.is-stuck .bar-brand { display: inline-flex; }
+.bar-main a:not(.bar-brand) { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; font: 700 .833rem var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.bar-main a:not(.bar-brand):hover { color: var(--red); }
+.bar-main a[aria-current="page"] { box-shadow: inset 0 -4px 0 var(--red); }
+.bar-page { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 4px; padding: 0 12px; border-top: 1px dotted var(--line); background: rgba(156, 195, 217, .16); }
+.bar-page a, .jump a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; color: var(--ink); text-decoration: none; }
+.bar-page a { font: italic 1.05rem var(--serif); }
+.bar-page a:hover, .jump a:hover { color: var(--red); }
+.bar-page a[aria-current="location"] { color: var(--red); font-weight: 700; box-shadow: inset 0 -3px 0 var(--red); }
+html { scroll-padding-top: 110px; }
+@media (max-width: 700px) {
+  html { scroll-padding-top: 60px; }
+  .bar-page { display: none; }
+  .bar-main { justify-content: flex-start; overflow-x: auto; scroll-snap-type: x proximity; padding: 0 4px; }
+  .bar-main a { scroll-snap-align: center; }
+}
+
+/* "Jump to": the sections of a long page, at its top */
+.jump { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 18px 0 6px; }
+.jump span { font: 700 .833rem var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+.jump a { background: var(--card); border: 1px solid var(--ink); font: 700 .833rem var(--sans); letter-spacing: .1em; text-transform: uppercase; }
+.jump a[aria-current="location"] { border-color: var(--red); color: var(--red); box-shadow: inset 0 -3px 0 var(--red); }
+
+/* Back to the top: appears after scrolling (script adds .show) */
+.totop { position: fixed; right: 14px; bottom: 14px; z-index: 40; display: inline-flex; align-items: center; min-height: 46px; padding: 0 18px; background: var(--ink); color: #fff; font: 800 .833rem var(--sans); letter-spacing: .16em; text-transform: uppercase; text-decoration: none; box-shadow: 4px 4px 0 var(--red); opacity: 0; transform: translateY(10px); transition: opacity .2s, transform .2s; }
+.totop:not(.show) { visibility: hidden; }
+.totop.show { opacity: 1; transform: none; }
+.totop:hover { color: #fff; }
+
+/* Footer contents: every page, so you never have to scroll back up */
+.site-footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 6px; margin-bottom: 10px; }
+.site-footer nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; font: 700 .833rem var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+.site-footer nav a:hover { color: var(--red); }
+.site-footer nav a[aria-current="page"] { box-shadow: inset 0 -3px 0 var(--red); }
+.site-footer p { margin: 0; }
+
+/* Page frame for the tool pages */
+.tool main { max-width: 980px; margin: 0 auto; padding: 28px 20px 72px; }
+.site-footer { max-width: 1080px; margin: 40px auto 0; padding: 22px 20px 56px; border-top: 6px double var(--ink); text-align: center; font: italic .95rem var(--serif); color: var(--muted); }
+
+/* Cards: white paper held with a strip of tape */
+form, .card, .scroll {
+  position: relative; background: var(--card); border: 1px solid var(--line); box-shadow: 0 12px 26px rgba(27, 42, 58, .14);
+}
+form, .card { padding: 22px; }
+form::before, .card::before {
+  content: ""; position: absolute; top: -12px; left: 50%; width: 84px; height: 26px; margin-left: -42px;
+  background: var(--tape); transform: rotate(-3deg); box-shadow: 0 1px 3px rgba(0, 0, 0, .12);
+}
+.card h3, form > h2, form > h3 { margin-top: 0; }
+.note { margin: 16px 0; padding: 14px 18px; background: var(--note); border: 1px solid var(--line); box-shadow: 2px 3px 0 rgba(27, 42, 58, .12); }
+ul { list-style: none; padding: 0; display: grid; gap: 14px; }
+
+/* Fields: a bottom line only, ruled paper for long text */
+form { display: grid; gap: 16px; }
+label { display: grid; gap: 4px; font: 700 .833rem var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+input, select, textarea { font: 1.05rem var(--serif); color: var(--ink); background: transparent; border: 0; border-bottom: 2px solid var(--ink); border-radius: 0; padding: 8px 2px; min-height: 44px; letter-spacing: 0; text-transform: none; }
+select { background: rgba(27, 42, 58, .05); padding: 8px 6px; }
+textarea { min-height: 128px; line-height: 32px; background: repeating-linear-gradient(transparent 0 31px, rgba(27, 42, 58, .22) 31px 32px); }
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; font-style: italic; }
+input:focus, select:focus, textarea:focus { border-bottom-color: var(--red); box-shadow: 0 3px 0 var(--red); }
+input[aria-invalid="true"], textarea[aria-invalid="true"] { border-bottom-color: var(--red); box-shadow: 0 3px 0 var(--red); }
+#msg { min-height: 1.4em; font-weight: 700; }
+.error { color: var(--red); font: italic 700 1rem var(--serif); letter-spacing: 0; text-transform: none; margin: 0; }
+.ok { color: var(--good); font-weight: 700; }
+
+/* Buttons: red, wide-spaced capitals, a hard ink shadow that presses flat */
+button, .btn, .choices a {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 10px 22px;
+  font: 800 .833rem var(--sans); letter-spacing: .2em; text-transform: uppercase; text-decoration: none;
+  background: var(--red); color: #fff; border: 0; box-shadow: 4px 4px 0 var(--ink); cursor: pointer; transition: transform .2s, box-shadow .2s;
+}
+button:hover, .btn:hover, .choices a:hover { color: #fff; transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+button:active, .btn:active, .choices a:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
+.btn.ghost, .choices a { background: transparent; color: var(--ink); border: 2px solid var(--ink); }
+.btn.ghost:hover, .choices a:hover { color: var(--red); border-color: var(--red); }
+button:disabled { background: rgba(27, 42, 58, .12); color: var(--muted); box-shadow: none; cursor: not-allowed; transform: none; }
+.choices { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; }
+
+/* Ledger tables: a double rule under the header, dotted row lines. Colour change on hover only: tables never move. */
+.scroll { overflow-x: auto; margin-bottom: 18px; }
+table { border-collapse: collapse; width: 100%; background: var(--card); font-family: var(--sans); font-size: .89rem; }
+.scroll table { min-width: 480px; }
+table:not(.scroll table) { border: 1px solid var(--line); box-shadow: 0 8px 20px rgba(27, 42, 58, .12); margin: 8px 0 16px; }
+th { text-align: left; padding: 12px 10px; border-bottom: 4px double var(--ink); font: 700 .833rem var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+td { padding: 11px 10px; vertical-align: top; border-bottom: 1px dotted rgba(27, 42, 58, .55); }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover td { background: rgba(156, 195, 217, .2); }
+
+/* Stamps and tags */
+.badge { display: inline-block; margin-right: 8px; padding: 2px 9px; background: var(--ink); color: #fff; font: 800 .833rem var(--sans); letter-spacing: .1em; text-transform: uppercase; }
+.overdue { display: inline-block; margin-left: 8px; padding: 1px 8px; border: 2px solid var(--red); color: var(--red); background: rgba(244, 241, 232, .75); font: 800 .833rem var(--sans); letter-spacing: .1em; text-transform: uppercase; transform: rotate(-3deg); }
+.meta { font: .833rem var(--sans); color: var(--muted); margin: 4px 0; }
+.scribble { display: inline-block; font: italic 1rem var(--serif); color: var(--red); transform: rotate(-2deg); }
+
+/* Everything that moves stops for anyone who asks for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

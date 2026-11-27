@@ -1,9 +1,8 @@
-body { font-family: system-ui, sans-serif; margin: 0; background: #f6f7f9; color: #1b1f24; }
-main { max-width: 640px; margin: 0 auto; padding: 16px; }
+/* Troubleshooting tree. The shared look is in theme.css. */
 /* Click-through tree without JavaScript: only the section the URL points at (#id) is visible. */
-section { display: none; background: #fff; border: 1px solid #d8dce1; border-radius: 6px; padding: 16px; }
-section:target, body:not(:has(:target)) #start { display: block; }
-.choices { display: flex; gap: 10px; flex-wrap: wrap; }
-.choices a { padding: 8px 16px; border: 1px solid #1b1f24; border-radius: 4px; text-decoration: none; color: inherit; font-weight: 600; }
-.done { border-left: 6px solid #2e7d32; }
-.escalate { border-left: 6px solid #c62828; }
+.tool main > section { display: none; position: relative; padding: 26px 24px; background: var(--card); border: 1px solid var(--line); box-shadow: 0 12px 26px rgba(27, 42, 58, .14); }
+.tool main > section:target, body:not(:has(:target)) #start { display: block; }
+.tool main > section::before { content: ""; position: absolute; top: -12px; left: 50%; width: 84px; height: 26px; margin-left: -42px; background: var(--tape); transform: rotate(-3deg); box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+.tool main > section h2 { margin-top: 0; border-bottom: 0; }
+.tool main > section.done { border-left: 8px solid var(--good); }
+.tool main > section.escalate { border-left: 8px solid var(--red); }

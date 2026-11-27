@@ -67,24 +67,25 @@ const isOverdue = (c, now = Date.now()) => !c.closed && now > c.due;
 const sortedCases = (cases) => [...cases].sort((a, b) => Number(a.closed) - Number(b.closed) || a.priority.localeCompare(b.priority) || a.due - b.due);
 
 // Plain SVG bar chart as a string. Only constants and numbers go in, so it is safe to inject as HTML.
+// Colours, fonts and the stamped look come from crm.css (the classes below), so the chart follows the site theme.
 function chartSvg(counts) {
-  const W = 500, H = 260, L = 40, R = 10, T = 20, B = 40;
+  const W = 500, H = 270, L = 44, R = 16, T = 34, B = 46;
   const pw = W - L - R, ph = H - T - B;
   const max = Math.max(...counts, 1), step = Math.ceil(max / 5), top = step * Math.ceil(max / step);
   const r = (n) => Math.round(n * 10) / 10;
-  const colors = ['#8fa3bf', '#3b6fd4', '#7a4fd0', '#2e7d32', '#b3261e'];
   const label = STAGES.map((s, i) => `${s} ${counts[i]}`).join(', ');
-  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Opportunities by stage: ${label}" font-family="system-ui, sans-serif" font-size="12" fill="#14202e">`;
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Opportunities by stage: ${label}">`;
   for (let v = 0; v <= top; v += step) {
     const y = r(T + ph - (v / top) * ph);
-    s += `<line x1="${L}" y1="${y}" x2="${W - R}" y2="${y}" stroke="#d8dfe8"/><text x="${L - 6}" y="${y + 4}" text-anchor="end">${v}</text>`;
+    s += `<line class="chart-grid" x1="${L}" y1="${y}" x2="${W - R}" y2="${y}"/><text class="chart-tick" x="${L - 8}" y="${y + 5}" text-anchor="end">${v}</text>`;
   }
-  const slot = pw / STAGES.length, bw = slot * 0.64;
+  const slot = pw / STAGES.length, bw = slot * 0.62;
   STAGES.forEach((stage, i) => {
     const h = (counts[i] / top) * ph, x = L + i * slot + (slot - bw) / 2, y = T + ph - h;
-    s += `<rect x="${r(x)}" y="${r(y)}" width="${r(bw)}" height="${r(h)}" fill="${colors[i]}"/>`;
-    s += `<text x="${r(x + bw / 2)}" y="${r(y - 5)}" text-anchor="middle" font-weight="700">${counts[i]}</text>`;
-    s += `<text x="${r(x + bw / 2)}" y="${H - B + 18}" text-anchor="middle">${stage}</text>`;
+    s += `<rect class="chart-shadow" x="${r(x + 5)}" y="${r(y + 5)}" width="${r(bw)}" height="${r(h)}"/>`;
+    s += `<rect class="chart-bar s${i}" x="${r(x)}" y="${r(y)}" width="${r(bw)}" height="${r(h)}"/>`;
+    s += `<text class="chart-count" x="${r(x + bw / 2)}" y="${r(y - 9)}" text-anchor="middle">${counts[i]}</text>`;
+    s += `<text class="chart-label" x="${r(x + bw / 2)}" y="${H - B + 24}" text-anchor="middle">${stage}</text>`;
   });
   return s + '</svg>';
 }

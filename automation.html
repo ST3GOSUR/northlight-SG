@@ -6,31 +6,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <title>Northlight Automation</title>
-  <link rel="stylesheet" href="helpdesk.css">
+  <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="automation.css">
 </head>
-<body>
+<body class="tool">
+  <a class="skip" href="#automation-page">Skip to main content</a>
+
+  <header class="mast" id="top">
+    <div class="mast-meta"><span>Vol. 25 &middot; Entry 90</span><span>Fictional expedition journal</span></div>
+    <p class="mast-title"><a href="index.html">The Northlight Field Journal</a></p>
+  </header>
+
+  <div class="bar">
+    <nav class="bar-main" aria-label="Pages">
+      <a class="bar-brand" href="index.html"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Northlight</a>
+      <a href="index.html">Home</a>
+      <a href="helpdesk.html">Help desk</a>
+      <a href="crm.html">CRM</a>
+      <a href="automation.html" aria-current="page">Automation</a>
+      <a href="settings.html">Settings</a>
+      <a href="staff.html">Staff</a>
+      <a href="troubleshoot.html">Troubleshooting</a>
+    </nav>
+  </div>
+
   <main id="automation-page">
-    <p><a href="index.html">&larr; Northlight Studio</a></p>
     <h1>Automation</h1>
+    <nav class="jump" aria-label="On this page"><span>Jump to</span><a href="#outbox-section">Outbox</a><a href="#log-section">Log</a><a href="#summary-section">Daily summary</a><a href="#rules-section">Rules</a></nav>
     <p class="note"><strong>Nothing is really sent.</strong> The outbox is only a list kept in this browser (localStorage), and all people shown are fake.
       Rules live in <code>rules.json</code>: edit one, then send another enquiry from the <a href="index.html#contact">home page</a> to see the behaviour change.</p>
 
-    <h2>Outbox</h2>
-    <div class="scroll"><table>
+    <h2 id="outbox-section">Outbox</h2>
+    <div class="scroll" tabindex="0" role="region" aria-label="Outbox table"><table>
       <thead><tr><th>Time</th><th>To</th><th>Subject</th><th>Message</th><th>Status</th></tr></thead>
       <tbody id="outbox"></tbody>
     </table></div>
 
-    <h2>Log</h2>
+    <h2 id="log-section">Log</h2>
     <p>One line for every rule that was checked: RAN, SKIPPED (condition not met) or ERROR. Lines from one enquiry share a run code. Newest first.</p>
-    <div class="scroll"><table>
+    <div class="scroll" tabindex="0" role="region" aria-label="Log table"><table>
       <thead><tr><th>Time</th><th>Run</th><th>Rule</th><th>Outcome</th><th>What happened</th></tr></thead>
       <tbody id="log"></tbody>
     </table></div>
     <p><button type="button" id="clear">Clear outbox and log</button></p>
 
-    <h2>Daily summary (GitHub Actions)</h2>
+    <h2 id="summary-section">Daily summary (GitHub Actions)</h2>
     <p>A GitHub Action writes a summary every day at 07:00 UTC, but it cannot see this browser. It summarises the file
       <code>data/snapshot.json</code> in the repository. To update it: click the button, save the file over <code>data/snapshot.json</code>,
       then commit and push it.</p>
@@ -38,10 +58,25 @@
       If you typed a real name or email into the enquiry form, clear it first.</p>
     <p><button type="button" id="export-snapshot">Export snapshot</button></p>
 
-    <h2>Rules in rules.json</h2>
+    <h2 id="rules-section">Rules in rules.json</h2>
     <p id="rules-error" class="error" role="alert" hidden></p>
     <ul id="rules"></ul>
   </main>
+
+  <footer class="site-footer">
+    <nav aria-label="All pages">
+      <a href="index.html">Home</a>
+      <a href="helpdesk.html">Help desk</a>
+      <a href="crm.html">CRM</a>
+      <a href="automation.html" aria-current="page">Automation</a>
+      <a href="settings.html">Settings</a>
+      <a href="staff.html">Staff</a>
+      <a href="troubleshoot.html">Troubleshooting</a>
+    </nav>
+    <p>Fictional expedition journal. All names and data are fictional and stay in your browser.</p>
+  </footer>
+  <a class="totop" href="#top">&uarr; Top</a>
   <script src="automation.js"></script>
+  <script src="theme.js"></script>
 </body>
 </html>

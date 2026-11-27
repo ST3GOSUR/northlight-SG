@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs><path id="ring" d="M100,100 m-70,0 a70,70 0 1,1 140,0 a70,70 0 1,1 -140,0"/></defs>
+  <g fill="none" stroke="#A8322A">
+    <circle cx="100" cy="100" r="94" stroke-width="5"/>
+    <circle cx="100" cy="100" r="85" stroke-width="2"/>
+    <circle cx="100" cy="100" r="50" stroke-width="2"/>
+  </g>
+  <text font-family="Georgia, 'Times New Roman', serif" font-size="13" letter-spacing="2.5" font-weight="700" fill="#A8322A"><textPath href="#ring">EXPEDITION READY &#183; NORTHLIGHT STUDIO &#183; </textPath></text>
+  <text x="100" y="94" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="700" fill="#A8322A">90&#176;N</text>
+  <text x="100" y="118" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="14" font-style="italic" fill="#A8322A">paid</text>
+</svg>

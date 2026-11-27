@@ -6,18 +6,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <title>Northlight CRM</title>
-  <link rel="stylesheet" href="helpdesk.css">
+  <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="crm.css">
 </head>
-<body>
-  <main>
-    <p><a href="index.html">&larr; Northlight Studio</a></p>
+<body class="tool">
+  <a class="skip" href="#main">Skip to main content</a>
+
+  <header class="mast" id="top">
+    <div class="mast-meta"><span>Vol. 25 &middot; Entry 90</span><span>Fictional expedition journal</span></div>
+    <p class="mast-title"><a href="index.html">The Northlight Field Journal</a></p>
+  </header>
+
+  <div class="bar">
+    <nav class="bar-main" aria-label="Pages">
+      <a class="bar-brand" href="index.html"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Northlight</a>
+      <a href="index.html">Home</a>
+      <a href="helpdesk.html">Help desk</a>
+      <a href="crm.html" aria-current="page">CRM</a>
+      <a href="automation.html">Automation</a>
+      <a href="settings.html">Settings</a>
+      <a href="staff.html">Staff</a>
+      <a href="troubleshoot.html">Troubleshooting</a>
+    </nav>
+  </div>
+
+  <main id="main">
     <h1>CRM</h1>
+    <nav class="jump" aria-label="On this page"><span>Jump to</span><a href="#leads-section">Leads</a><a href="#accounts-section">Accounts</a><a href="#contacts-section">Contacts</a><a href="#opportunities-section">Opportunities</a><a href="#cases-section">Support cases</a></nav>
     <p class="note">All people and companies here are fake. Data is stored only in this browser (localStorage).</p>
     <p id="msg" role="status"></p>
 
-    <h2>Leads</h2>
-    <div class="scroll"><table><thead><tr><th>Name</th><th>Company</th><th>Email</th><th></th></tr></thead><tbody id="leads"></tbody></table></div>
+    <h2 id="leads-section">Leads</h2>
+    <div class="scroll" tabindex="0" role="region" aria-label="Leads table"><table><thead><tr><th>Name</th><th>Company</th><th>Email</th><th></th></tr></thead><tbody id="leads"></tbody></table></div>
     <form id="lead-form">
       <h3>Add a lead</h3>
       <label>Name <input name="name" maxlength="60"></label>
@@ -26,19 +46,19 @@
       <button type="submit">Add lead</button>
     </form>
 
-    <h2>Accounts</h2>
-    <div class="scroll"><table><thead><tr><th>Account</th><th>Contacts</th><th>Opportunities</th></tr></thead><tbody id="accounts"></tbody></table></div>
+    <h2 id="accounts-section">Accounts</h2>
+    <div class="scroll" tabindex="0" role="region" aria-label="Accounts table"><table><thead><tr><th>Account</th><th>Contacts</th><th>Opportunities</th></tr></thead><tbody id="accounts"></tbody></table></div>
 
-    <h2>Contacts</h2>
-    <div class="scroll"><table><thead><tr><th>Name</th><th>Email</th><th>Account</th></tr></thead><tbody id="contacts"></tbody></table></div>
+    <h2 id="contacts-section">Contacts</h2>
+    <div class="scroll" tabindex="0" role="region" aria-label="Contacts table"><table><thead><tr><th>Name</th><th>Email</th><th>Account</th></tr></thead><tbody id="contacts"></tbody></table></div>
 
-    <h2>Opportunities</h2>
-    <div class="scroll"><table><thead><tr><th>Opportunity</th><th>Account</th><th>Stage</th></tr></thead><tbody id="opps"></tbody></table></div>
+    <h2 id="opportunities-section">Opportunities</h2>
+    <div class="scroll" tabindex="0" role="region" aria-label="Opportunities table"><table><thead><tr><th>Opportunity</th><th>Account</th><th>Stage</th></tr></thead><tbody id="opps"></tbody></table></div>
     <h3>Opportunities by stage</h3>
     <div id="chart"></div>
 
-    <h2>Support cases</h2>
-    <div class="scroll"><table><thead><tr><th>Subject</th><th>Account</th><th>Priority</th><th>Due</th><th></th></tr></thead><tbody id="cases"></tbody></table></div>
+    <h2 id="cases-section">Support cases</h2>
+    <div class="scroll" tabindex="0" role="region" aria-label="Support cases table"><table><thead><tr><th>Subject</th><th>Account</th><th>Priority</th><th>Due</th><th></th></tr></thead><tbody id="cases"></tbody></table></div>
     <form id="case-form">
       <h3>Add a case</h3>
       <label>Subject <input name="subject" maxlength="100"></label>
@@ -50,6 +70,21 @@
 
     <p><button type="button" id="reset">Reset demo data</button></p>
   </main>
+
+  <footer class="site-footer">
+    <nav aria-label="All pages">
+      <a href="index.html">Home</a>
+      <a href="helpdesk.html">Help desk</a>
+      <a href="crm.html" aria-current="page">CRM</a>
+      <a href="automation.html">Automation</a>
+      <a href="settings.html">Settings</a>
+      <a href="staff.html">Staff</a>
+      <a href="troubleshoot.html">Troubleshooting</a>
+    </nav>
+    <p>Fictional expedition journal. All names and data are fictional and stay in your browser.</p>
+  </footer>
+  <a class="totop" href="#top">&uarr; Top</a>
   <script src="crm.js"></script>
+  <script src="theme.js"></script>
 </body>
 </html>

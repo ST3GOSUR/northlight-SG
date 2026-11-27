@@ -61,10 +61,12 @@ assert.equal(c.sortedCases(db.cases).at(-1).subject, 'Server down', 'closed case
 // Chart: one bar per stage, heights proportional, stage labels and counts present
 const svg = c.chartSvg([0, 2, 0, 1, 0]);
 assert.ok(svg.startsWith('<svg') && svg.endsWith('</svg>'));
-assert.equal((svg.match(/<rect /g) || []).length, 5);
+assert.equal((svg.match(/<rect class="chart-bar s\d"/g) || []).length, 5, 'one bar per stage');
+assert.equal((svg.match(/<rect class="chart-shadow"/g) || []).length, 5, 'and one shadow per bar');
+assert.ok(!/ style=|fill="#|stroke="#/.test(svg), 'colours come from the stylesheet, not the markup');
 for (const s of c.STAGES) assert.ok(svg.includes(`>${s}</text>`), s);
 assert.ok(svg.includes('Opportunities by stage: Lead 0, Qualified 2, Quote 0, Won 1, Lost 0'));
-const heights = [...svg.matchAll(/<rect [^>]*height="([\d.]+)"/g)].map((m) => Number(m[1]));
+const heights = [...svg.matchAll(/<rect class="chart-bar s\d" [^>]*height="([\d.]+)"/g)].map((m) => Number(m[1]));
 assert.equal(heights[1], heights[3] * 2, 'a bar for 2 is twice as tall as a bar for 1');
 assert.equal(heights[0], 0);
 assert.ok(c.chartSvg([0, 0, 0, 0, 0]).includes('<rect'), 'empty chart still draws');

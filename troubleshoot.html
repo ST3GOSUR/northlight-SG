@@ -6,11 +6,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <title>No internet - troubleshooting</title>
+  <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="troubleshoot.css">
 </head>
-<body>
-  <main>
-    <p><a href="index.html">&larr; Northlight Studio</a></p>
+<body class="tool">
+  <a class="skip" href="#main">Skip to main content</a>
+
+  <header class="mast" id="top">
+    <div class="mast-meta"><span>Vol. 25 &middot; Entry 90</span><span>Fictional expedition journal</span></div>
+    <p class="mast-title"><a href="index.html">The Northlight Field Journal</a></p>
+  </header>
+
+  <div class="bar">
+    <nav class="bar-main" aria-label="Pages">
+      <a class="bar-brand" href="index.html"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Northlight</a>
+      <a href="index.html">Home</a>
+      <a href="helpdesk.html">Help desk</a>
+      <a href="crm.html">CRM</a>
+      <a href="automation.html">Automation</a>
+      <a href="settings.html">Settings</a>
+      <a href="staff.html">Staff</a>
+      <a href="troubleshoot.html" aria-current="page">Troubleshooting</a>
+    </nav>
+  </div>
+
+  <main id="main">
     <h1>No internet</h1>
 
     <section id="start">
@@ -73,5 +93,20 @@
       <div class="choices"><a href="#start">Start again</a></div>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <nav aria-label="All pages">
+      <a href="index.html">Home</a>
+      <a href="helpdesk.html">Help desk</a>
+      <a href="crm.html">CRM</a>
+      <a href="automation.html">Automation</a>
+      <a href="settings.html">Settings</a>
+      <a href="staff.html">Staff</a>
+      <a href="troubleshoot.html" aria-current="page">Troubleshooting</a>
+    </nav>
+    <p>Fictional expedition journal. All names and data are fictional and stay in your browser.</p>
+  </footer>
+  <a class="totop" href="#top">&uarr; Top</a>
+  <script src="theme.js"></script>
 </body>
 </html>

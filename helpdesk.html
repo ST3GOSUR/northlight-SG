@@ -6,15 +6,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <title>Northlight Helpdesk</title>
+  <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="helpdesk.css">
 </head>
-<body>
-  <main>
-    <p><a href="index.html">&larr; Northlight Studio</a></p>
+<body class="tool">
+  <a class="skip" href="#main">Skip to main content</a>
+
+  <header class="mast" id="top">
+    <div class="mast-meta"><span>Vol. 25 &middot; Entry 90</span><span>Fictional expedition journal</span></div>
+    <p class="mast-title"><a href="index.html">The Northlight Field Journal</a></p>
+  </header>
+
+  <div class="bar">
+    <nav class="bar-main" aria-label="Pages">
+      <a class="bar-brand" href="index.html"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Northlight</a>
+      <a href="index.html">Home</a>
+      <a href="helpdesk.html" aria-current="page">Help desk</a>
+      <a href="crm.html">CRM</a>
+      <a href="automation.html">Automation</a>
+      <a href="settings.html">Settings</a>
+      <a href="staff.html">Staff</a>
+      <a href="troubleshoot.html">Troubleshooting</a>
+    </nav>
+  </div>
+
+  <main id="main">
     <h1>Helpdesk</h1>
+    <nav class="jump" aria-label="On this page"><span>Jump to</span><a href="#new-ticket">New ticket</a><a href="#all-tickets">Tickets</a></nav>
 
     <form id="ticket-form">
-      <h2>New ticket</h2>
+      <h2 id="new-ticket">New ticket</h2>
       <label>Requester <input name="requester" required maxlength="60"></label>
       <label>Issue <textarea name="issue" required maxlength="300" rows="3"></textarea></label>
       <label>Impact
@@ -30,11 +51,26 @@
       <button type="submit">Create ticket</button>
     </form>
 
-    <h2>Tickets</h2>
+    <h2 id="all-tickets">Tickets</h2>
     <button type="button" id="export">Export tickets (JSON)</button>
     <p>Response targets: P1 1 hour, P2 4 hours, P3 24 hours.</p>
     <ul id="tickets"></ul>
   </main>
+
+  <footer class="site-footer">
+    <nav aria-label="All pages">
+      <a href="index.html">Home</a>
+      <a href="helpdesk.html" aria-current="page">Help desk</a>
+      <a href="crm.html">CRM</a>
+      <a href="automation.html">Automation</a>
+      <a href="settings.html">Settings</a>
+      <a href="staff.html">Staff</a>
+      <a href="troubleshoot.html">Troubleshooting</a>
+    </nav>
+    <p>Fictional expedition journal. All names and data are fictional and stay in your browser.</p>
+  </footer>
+  <a class="totop" href="#top">&uarr; Top</a>
   <script src="helpdesk.js"></script>
+  <script src="theme.js"></script>
 </body>
 </html>

@@ -7,6 +7,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <title>Northlight Studio - 25-person design studio</title>
   <meta name="description" content="Northlight Studio is a 25-person design studio. We create brand identity, web and digital design, and print for growing companies.">
+  <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="index.css">
   <script type="application/ld+json">
   {
@@ -25,51 +26,104 @@
   }
   </script>
 </head>
-<body>
-  <header>
-    <div class="wrap">
-      <a class="brand" href="index.html">Northlight Studio</a>
-      <nav aria-label="Main">
-        <a href="#services">Services</a>
-        <a href="#faq">FAQ</a>
-        <a href="#contact">Contact</a>
-        <a href="helpdesk.html">Helpdesk</a>
-        <a href="crm.html">CRM</a>
-        <a href="automation.html">Automation</a>
-        <a href="settings.html">Settings</a>
-        <a href="staff.html">Staff</a>
-        <a href="troubleshoot.html">Troubleshooting</a>
-      </nav>
-    </div>
+<body class="home">
+  <div class="snow" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <a class="skip" href="#main">Skip to main content</a>
+
+  <header class="mast" id="top">
+    <div class="mast-meta"><span>Vol. 25 &middot; Entry 90</span><span>Fictional expedition journal</span></div>
+    <p class="mast-title"><a href="index.html">The Northlight Field Journal</a></p>
   </header>
 
-  <main class="wrap">
-    <section class="hero">
-      <h1>Northlight Studio: clear, considered design</h1>
-      <p>We are a 25-person design studio. We help growing companies look and sound like themselves, in print and on screen.</p>
-      <img src="northlight.svg" width="800" height="300" alt="Abstract illustration of northern lights over a dark sky">
+  <div class="bar">
+    <nav class="bar-main" aria-label="Pages">
+      <a class="bar-brand" href="index.html"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Northlight</a>
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="helpdesk.html">Help desk</a>
+      <a href="crm.html">CRM</a>
+      <a href="automation.html">Automation</a>
+      <a href="settings.html">Settings</a>
+      <a href="staff.html">Staff</a>
+      <a href="troubleshoot.html">Troubleshooting</a>
+    </nav>
+    <nav class="bar-page" aria-label="On this page">
+      <a href="#services">Services</a>
+      <a href="#tools">Tools</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+
+  <main class="wrap" id="main">
+    <section class="spread">
+      <div>
+        <p class="entry">Entry No. 90 &middot; Design studio &middot; 25 people</p>
+        <h1>Northlight Studio: <em>clear, considered</em> design.</h1>
+        <p class="lede">We are a 25-person design studio. We help growing companies look and sound like themselves, in print and on screen. These are our notes from the top of the world.</p>
+        <p class="cta-row"><a class="btn" href="#contact">Plan a project</a> <a class="btn ghost" href="#services">See our services</a> <span class="scribble">&larr; every project starts with a map</span></p>
+        <dl class="sig">
+          <div><dt>crew</dt><dd>25</dd></div>
+          <div><dt>weeks per project</dt><dd>6&ndash;12</dd></div>
+          <div><dt>day to reply</dt><dd>1</dd></div>
+        </dl>
+      </div>
+      <figure class="pin">
+        <svg viewBox="0 0 400 300" role="img" aria-label="Hand-drawn map of ice contours with a red route from base camp to the pole">
+          <rect width="400" height="300" fill="#EAF2F7"/>
+          <g fill="none" stroke="#9CC3D9" stroke-width="2"><path d="M20 240 C80 200 120 230 180 190 S300 150 380 170"/><path d="M20 200 C90 160 130 190 190 150 S300 110 380 130"/><path d="M30 270 C100 235 140 262 200 228 S310 192 390 210"/><path d="M40 150 C100 120 150 140 210 105 S320 70 385 88"/></g>
+          <path class="route-base" d="M44 252 C100 210 150 240 205 190 S290 130 340 88"/>
+          <path class="route-draw" pathLength="100" d="M44 252 C100 210 150 240 205 190 S290 130 340 88"/>
+          <circle cx="44" cy="252" r="7" fill="#1B2A3A"/>
+          <text x="56" y="274" font-family="Georgia,serif" font-style="italic" font-size="16" fill="#1B2A3A">base camp</text>
+          <g stroke="#A8322A" stroke-width="5" stroke-linecap="round"><path d="M332 80l16 16M348 80l-16 16"/></g>
+          <text x="296" y="66" font-family="Georgia,serif" font-style="italic" font-size="16" fill="#A8322A">the Pole</text>
+          <g transform="translate(340 235)" fill="none" stroke="#1B2A3A" stroke-width="1.6"><circle r="24"/><path d="M0 -34V34M-34 0H34"/><path d="M0 -22L6 0L0 22L-6 0Z" fill="#1B2A3A"/><text y="-38" text-anchor="middle" font-family="Georgia,serif" font-size="15" fill="#1B2A3A" stroke="none">N</text></g>
+        </svg>
+        <figcaption>Fig. 1 &mdash; the route, as planned.</figcaption>
+        <img class="stamp" src="stamp.svg" width="200" height="200" alt="Red round stamp reading Expedition ready, Northlight Studio, 90 degrees north">
+      </figure>
     </section>
 
-    <section id="services">
+    <section class="sec" id="services">
+      <p class="kicker"><span>Plates I &ndash; III</span><span>What we make</span></p>
       <h2>Services</h2>
-      <div class="services">
-        <article class="card"><h3>Brand identity</h3><p>Logos, colour, type and the rules that keep your brand consistent everywhere.</p></article>
-        <article class="card"><h3>Web and digital design</h3><p>Fast, accessible websites and product screens that work well on phones first.</p></article>
-        <article class="card"><h3>Print and packaging</h3><p>Brochures, reports and packaging that feel as good in the hand as they look.</p></article>
+      <div class="plates">
+        <article class="plate"><span class="num">Plate I</span><div class="art"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M12 2v20M4 7l16 10M20 7L4 17M9 3l3 2 3-2M9 21l3-2 3 2"/></svg></div><h3>Brand identity</h3><p>Logos, colour, type and the rules that keep your brand consistent everywhere.</p></article>
+        <article class="plate"><span class="num">Plate II</span><div class="art"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></div><h3>Web and digital design</h3><p>Fast, accessible websites and product screens that work well on phones first.</p></article>
+        <article class="plate"><span class="num">Plate III</span><div class="art"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 20l7-12 4 6 3-4 6 10z"/></svg></div><h3>Print and packaging</h3><p>Brochures, reports and packaging that feel as good in the hand as they look.</p></article>
       </div>
     </section>
 
-    <section id="faq">
+    <section class="sec" id="tools">
+      <p class="kicker"><span>Field equipment</span><span>Contents</span></p>
+      <h2>Our tools</h2>
+      <p>The studio's own tools. All the people and data in them are fictional.</p>
+      <ul class="toc">
+        <li><a href="helpdesk.html"><span>Help desk</span><em>log and track tickets</em><i class="dots"></i><span class="pg">p. 1</span></a></li>
+        <li><a href="crm.html"><span>CRM</span><em>leads, accounts, cases</em><i class="dots"></i><span class="pg">p. 2</span></a></li>
+        <li><a href="automation.html"><span>Automation</span><em>what ran, what was queued</em><i class="dots"></i><span class="pg">p. 3</span></a></li>
+        <li><a href="staff.html"><span>Staff</span><em>one-time code sign-in</em><i class="dots"></i><span class="pg">p. 4</span></a></li>
+        <li><a href="settings.html"><span>Settings</span><em>health and data export</em><i class="dots"></i><span class="pg">p. 5</span></a></li>
+        <li><a href="troubleshoot.html"><span>Troubleshooting</span><em>when there is no internet</em><i class="dots"></i><span class="pg">p. 6</span></a></li>
+      </ul>
+    </section>
+
+    <section class="sec" id="faq">
+      <p class="kicker"><span>Letters and answers</span><span>Correspondence</span></p>
       <h2>Frequently asked questions</h2>
+      <div class="qa">
       <details><summary>How big is the studio?</summary><p>We are 25 people: designers, strategists and producers who work together on every project.</p></details>
       <details><summary>How long does a project take?</summary><p>A brand identity usually takes 6 to 8 weeks and a website 8 to 12 weeks. We agree a timeline before we start.</p></details>
       <details><summary>How do we get started?</summary><p>Send us a message with the contact form. We reply within one working day and arrange a short call.</p></details>
       <details><summary>Did you rewrite one FAQ answer like you were supposed to?</summary><p>Yes, I did!</p></details>
+      </div>
     </section>
 
-    <section id="contact">
+    <section class="sec" id="contact">
+      <p class="kicker"><span>Send a telegram</span><span>We reply within one working day</span></p>
       <h2>Contact us</h2>
       <form id="contact-form" novalidate>
+        <p class="tele-title">Telegram</p>
         <label>Your name
           <input name="name" autocomplete="name" maxlength="60" aria-describedby="name-error">
           <span class="error" id="name-error" role="alert" hidden></span>
@@ -84,12 +138,26 @@
         </label>
         <button type="submit">Send message</button>
         <p id="form-status" role="status"></p>
+        <span class="postmark" aria-hidden="true">Post<b>90&deg;N</b>Paid</span>
       </form>
     </section>
-
-    <footer>All names and content on this site are fictional. The contact form runs the rules in <code>rules.json</code>: it adds a lead to the <a href="crm.html">CRM</a> and a ticket to the <a href="helpdesk.html">helpdesk</a>, and an urgent message also becomes P1 with an alert in the <a href="automation.html">outbox</a>. Everything stays in your browser and nothing is really sent.</footer>
   </main>
+
+  <footer class="site-footer">
+    <nav aria-label="All pages">
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="helpdesk.html">Help desk</a>
+      <a href="crm.html">CRM</a>
+      <a href="automation.html">Automation</a>
+      <a href="settings.html">Settings</a>
+      <a href="staff.html">Staff</a>
+      <a href="troubleshoot.html">Troubleshooting</a>
+    </nav>
+    <p>All names and content on this site are fictional. The contact form runs the rules in <code>rules.json</code>: it adds a lead to the <a href="crm.html">CRM</a> and a ticket to the <a href="helpdesk.html">helpdesk</a>, and an urgent message also becomes P1 with an alert in the <a href="automation.html">outbox</a>. Everything stays in your browser and nothing is really sent.</p>
+  </footer>
+  <a class="totop" href="#top">&uarr; Top</a>
   <script src="automation.js"></script>
   <script src="contact.js"></script>
+  <script src="theme.js"></script>
 </body>
 </html>

@@ -1,8 +1,17 @@
-[hidden] { display: none !important; }
-.scroll { overflow-x: auto; }
-table { border-collapse: collapse; width: 100%; background: #fff; min-width: 460px; }
-th, td { border: 1px solid #d8dce1; padding: 6px; text-align: left; vertical-align: top; }
-h2 { margin-top: 32px; }
-#msg { min-height: 1.4em; font-weight: 600; }
-.note { background: #fff4d6; border: 1px solid #e0b84a; border-radius: 6px; padding: 12px; }
-#chart svg { width: 100%; height: auto; max-width: 520px; }
+/* CRM only. The shared look is in theme.css. */
+
+/* Opportunities by stage: a taped plate with ink-outlined bars and a hard shadow, like the buttons */
+#chart { position: relative; max-width: 600px; margin: 0 0 18px; padding: 16px 12px 6px; background: var(--card); border: 1px solid var(--line); box-shadow: 0 12px 26px rgba(27, 42, 58, .14); }
+#chart::before { content: ""; position: absolute; top: -12px; left: 50%; width: 84px; height: 26px; margin-left: -42px; background: var(--tape); transform: rotate(-3deg); box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+#chart svg { display: block; width: 100%; height: auto; }
+.chart-grid { stroke: var(--ink); stroke-opacity: .35; stroke-dasharray: 2 6; stroke-linecap: round; }
+.chart-tick, .chart-label { font: 700 15px var(--sans); fill: var(--ink); }
+.chart-count { font: 800 22px var(--serif); fill: var(--ink); }
+.chart-shadow { fill: var(--ink); }
+.chart-bar { stroke: var(--ink); stroke-width: 2.5; }
+.chart-bar[height="0"], .chart-shadow[height="0"] { stroke: none; }
+.s0 { fill: var(--ice); }
+.s1 { fill: #E0CD96; }
+.s2 { fill: var(--red); }
+.s3 { fill: var(--good); }
+.s4 { fill: var(--muted); }
