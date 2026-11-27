@@ -40,6 +40,14 @@
     </table></div>
     <p><button type="button" id="clear">Clear outbox and log</button></p>
 
+    <h2>Daily summary (GitHub Actions)</h2>
+    <p>A GitHub Action writes a summary every day at 07:00 UTC, but it cannot see this browser. It summarises the file
+      <code>data/snapshot.json</code> in the repository. To update it: click the button, save the file over <code>data/snapshot.json</code>,
+      then commit and push it.</p>
+    <p class="note"><strong>Commit fake data only.</strong> The snapshot contains everything stored in this browser, and the repository and the website are public.
+      If you typed a real name or email into the enquiry form, clear it first.</p>
+    <p><button type="button" id="export-snapshot">Export snapshot</button></p>
+
     <h2>Rules in rules.json</h2>
     <p id="rules-error" class="error" role="alert" hidden></p>
     <ul id="rules"></ul>

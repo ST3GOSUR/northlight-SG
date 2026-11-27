@@ -1,0 +1,20 @@
+name: Daily summary
+
+on:
+  schedule:
+    - cron: '0 7 * * *' # every day at 07:00 UTC
+  workflow_dispatch: # also lets you run it by hand from the Actions tab
+
+permissions:
+  contents: read # the job only reads the repo; it cannot push or change anything
+
+jobs:
+  summary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write the summary
+        run: |
+          node tools/daily-summary.js > summary.md
+          cat summary.md
+          cat summary.md >> "$GITHUB_STEP_SUMMARY"

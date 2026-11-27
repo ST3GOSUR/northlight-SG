@@ -161,6 +161,22 @@ if (typeof document !== 'undefined' && document.getElementById('automation-page'
     try { localStorage.removeItem(KEYS.outbox); localStorage.removeItem(KEYS.log); } catch (e) { /* storage blocked */ }
     render();
   });
+  // Everything the daily summary needs, as one file. Saved by the browser; nothing is uploaded.
+  $('export-snapshot').addEventListener('click', () => {
+    const snapshot = {
+      exportedAt: new Date().toISOString(),
+      tickets: read(KEYS.tickets),
+      crm: readJson(localStorage, KEYS.crm, emptyCrm, isCrm),
+      outbox: read(KEYS.outbox),
+      log: read(KEYS.log),
+    };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(snapshot, null, 2)], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'snapshot.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
   window.addEventListener('storage', render);
   render();
 

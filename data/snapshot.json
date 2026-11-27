@@ -1,0 +1,191 @@
+{
+  "exportedAt": "2026-11-27T09:00:00.000Z",
+  "tickets": [
+    {
+      "id": 1,
+      "requester": "Alice Example (alice@example.com)",
+      "issue": "Website enquiry: Need a new logo for our cafe",
+      "impact": 1,
+      "urgency": 1,
+      "priority": "P3",
+      "status": "New",
+      "created": 1795687200000,
+      "replies": []
+    },
+    {
+      "id": 2,
+      "requester": "Bob Sample (bob@example.com)",
+      "issue": "Website enquiry: URGENT site down before a launch",
+      "impact": 3,
+      "urgency": 3,
+      "priority": "P1",
+      "status": "In progress",
+      "created": 1795690800000,
+      "replies": []
+    },
+    {
+      "id": 3,
+      "requester": "Carol Test (carol@example.com)",
+      "issue": "Website enquiry: Quote for packaging",
+      "impact": 1,
+      "urgency": 1,
+      "priority": "P3",
+      "status": "Resolved",
+      "created": 1795683600000,
+      "replies": []
+    },
+    {
+      "id": 4,
+      "requester": "Dan Demo (dan@example.com)",
+      "issue": "Printer on floor 2 jams on A3 paper",
+      "impact": 2,
+      "urgency": 2,
+      "priority": "P2",
+      "status": "New",
+      "created": 1795694400000,
+      "replies": []
+    }
+  ],
+  "crm": {
+    "leads": [
+      {
+        "id": "l1",
+        "name": "Alice Example",
+        "company": "(not given)",
+        "email": "alice@example.com",
+        "converted": false,
+        "source": "website"
+      },
+      {
+        "id": "l2",
+        "name": "Omar Test",
+        "company": "Harbour Bikes",
+        "email": "omar@example.com",
+        "converted": true,
+        "accountId": "a1"
+      }
+    ],
+    "accounts": [
+      {
+        "id": "a1",
+        "name": "Harbour Bikes"
+      }
+    ],
+    "contacts": [
+      {
+        "id": "c1",
+        "accountId": "a1",
+        "name": "Omar Test",
+        "email": "omar@example.com"
+      }
+    ],
+    "opportunities": [
+      {
+        "id": "o1",
+        "accountId": "a1",
+        "name": "Harbour Bikes - new project",
+        "stage": "Quote"
+      }
+    ],
+    "cases": [
+      {
+        "id": "k1",
+        "accountId": null,
+        "subject": "Logo files missing from handover",
+        "priority": "P2",
+        "due": 1795701600000,
+        "closed": false
+      },
+      {
+        "id": "k2",
+        "accountId": "a1",
+        "subject": "Fonts not installed",
+        "priority": "P3",
+        "due": 1795712400000,
+        "closed": true
+      }
+    ]
+  },
+  "outbox": [
+    {
+      "id": "m1",
+      "time": 1795690800000,
+      "to": "duty-manager@example.com",
+      "subject": "URGENT enquiry from Bob Sample",
+      "body": "Bob Sample (bob@example.com) wrote: URGENT site down before a launch - ticket priority P1",
+      "status": "Not sent (demo)"
+    }
+  ],
+  "log": [
+    {
+      "time": 1795687200000,
+      "run": "aaa111",
+      "rule": "form_sent",
+      "outcome": "EVENT",
+      "detail": "form_sent from Alice Example"
+    },
+    {
+      "time": 1795687200000,
+      "run": "aaa111",
+      "rule": "create-lead",
+      "outcome": "RAN",
+      "detail": "lead created for Alice Example"
+    },
+    {
+      "time": 1795687200000,
+      "run": "aaa111",
+      "rule": "create-ticket",
+      "outcome": "RAN",
+      "detail": "ticket created with priority P3"
+    },
+    {
+      "time": 1795687200000,
+      "run": "aaa111",
+      "rule": "urgent-p1",
+      "outcome": "SKIPPED",
+      "detail": "condition not met: message does not contain the word \"urgent\""
+    },
+    {
+      "time": 1795687200000,
+      "run": "aaa111",
+      "rule": "urgent-alert",
+      "outcome": "SKIPPED",
+      "detail": "condition not met: message does not contain the word \"urgent\""
+    },
+    {
+      "time": 1795690800000,
+      "run": "bbb222",
+      "rule": "form_sent",
+      "outcome": "EVENT",
+      "detail": "form_sent from Bob Sample"
+    },
+    {
+      "time": 1795690800000,
+      "run": "bbb222",
+      "rule": "create-lead",
+      "outcome": "RAN",
+      "detail": "lead created for Bob Sample"
+    },
+    {
+      "time": 1795690800000,
+      "run": "bbb222",
+      "rule": "create-ticket",
+      "outcome": "RAN",
+      "detail": "ticket created with priority P3"
+    },
+    {
+      "time": 1795690800000,
+      "run": "bbb222",
+      "rule": "urgent-p1",
+      "outcome": "RAN",
+      "detail": "ticket priority set to P1"
+    },
+    {
+      "time": 1795690800000,
+      "run": "bbb222",
+      "rule": "urgent-alert",
+      "outcome": "RAN",
+      "detail": "alert queued for duty-manager@example.com (nothing is really sent)"
+    }
+  ]
+}
