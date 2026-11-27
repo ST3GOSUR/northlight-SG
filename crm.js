@@ -74,7 +74,7 @@ function chartSvg(counts) {
   const r = (n) => Math.round(n * 10) / 10;
   const colors = ['#8fa3bf', '#3b6fd4', '#7a4fd0', '#2e7d32', '#b3261e'];
   const label = STAGES.map((s, i) => `${s} ${counts[i]}`).join(', ');
-  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Opportunities by stage: ${label}" style="width:100%;height:auto;max-width:520px" font-family="system-ui, sans-serif" font-size="12" fill="#14202e">`;
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Opportunities by stage: ${label}" font-family="system-ui, sans-serif" font-size="12" fill="#14202e">`;
   for (let v = 0; v <= top; v += step) {
     const y = r(T + ph - (v / top) * ph);
     s += `<line x1="${L}" y1="${y}" x2="${W - R}" y2="${y}" stroke="#d8dfe8"/><text x="${L - 6}" y="${y + 4}" text-anchor="end">${v}</text>`;

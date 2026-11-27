@@ -17,6 +17,7 @@ for (const name of pages) {
     }));
     expect(policy['default-src']).toEqual(["'self'"]);
     expect(policy['script-src'], 'scripts only from this site: no inline, no eval, no outside scripts').toEqual(["'self'"]);
+    expect(policy['style-src'], 'styles only from this site: no inline styles').toEqual(["'self'"]);
     expect(policy['object-src']).toEqual(["'none'"]);
     expect(policy['base-uri']).toEqual(["'self'"]);
     expect(policy['form-action']).toEqual(["'self'"]);
@@ -33,6 +34,22 @@ for (const name of pages) {
     await page.waitForLoadState('networkidle'); // the shared fixture fails the test on any CSP violation while loading
   });
 }
+
+// The policy forbids inline styles, so none may creep back in. Checked in the source, not only in the browser,
+// because a style that only appears after some click would not show up on page load.
+test('no page or script uses inline styles', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const root = path.join(__dirname, '..');
+  const files = fs.readdirSync(root).filter((n) => /\.(html|js)$/.test(n) && n !== 'playwright.config.js' && !n.endsWith('.test.js'));
+  const found = [];
+  for (const file of files) {
+    fs.readFileSync(path.join(root, file), 'utf8').split(/\r?\n/).forEach((line, i) => {
+      if (/<style[\s>]|\sstyle=|\.style\.|\.cssText|setAttribute\(\s*['"]style/.test(line)) found.push(`${file}:${i + 1}`);
+    });
+  }
+  expect(found, 'inline styles found').toEqual([]);
+});
 
 test('features still work under the policy: form send, rules loading and both downloads', async ({ page }) => {
   await page.goto('index.html');

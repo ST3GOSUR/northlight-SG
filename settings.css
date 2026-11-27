@@ -1,0 +1,7 @@
+[hidden] { display: none !important; }
+table { border-collapse: collapse; width: 100%; background: #fff; }
+th, td { border: 1px solid #d8dce1; padding: 6px; text-align: left; }
+h2 { margin-top: 32px; }
+.note { background: #fff4d6; border: 1px solid #e0b84a; border-radius: 6px; padding: 12px; }
+.error { color: #b3261e; font-weight: 600; }
+#msg { min-height: 1.4em; font-weight: 600; }

@@ -1,0 +1,11 @@
+[hidden] { display: none !important; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; background: #fff; min-width: 520px; }
+th, td { border: 1px solid #d8dce1; padding: 6px; text-align: left; vertical-align: top; }
+h2 { margin-top: 32px; }
+.note { background: #fff4d6; border: 1px solid #e0b84a; border-radius: 6px; padding: 12px; }
+.error { color: #b3261e; font-weight: 600; }
+td.RAN { color: #1b6e2b; font-weight: 700; }
+td.SKIPPED { color: #5b6673; }
+td.ERROR { color: #b3261e; font-weight: 700; }
+td.EVENT { font-weight: 700; }

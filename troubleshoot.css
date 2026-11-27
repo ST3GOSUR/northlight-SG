@@ -1,0 +1,9 @@
+body { font-family: system-ui, sans-serif; margin: 0; background: #f6f7f9; color: #1b1f24; }
+main { max-width: 640px; margin: 0 auto; padding: 16px; }
+/* Click-through tree without JavaScript: only the section the URL points at (#id) is visible. */
+section { display: none; background: #fff; border: 1px solid #d8dce1; border-radius: 6px; padding: 16px; }
+section:target, body:not(:has(:target)) #start { display: block; }
+.choices { display: flex; gap: 10px; flex-wrap: wrap; }
+.choices a { padding: 8px 16px; border: 1px solid #1b1f24; border-radius: 4px; text-decoration: none; color: inherit; font-weight: 600; }
+.done { border-left: 6px solid #2e7d32; }
+.escalate { border-left: 6px solid #c62828; }

@@ -34,7 +34,7 @@ This site is a **learning model**: all people and data are fake, and everything 
 **What can go wrong.** Text typed into a form, such as `<script>` or an image with an `onerror`, is later shown on a page as real code and runs in another person's browser.
 
 **Fixes.**
-- *Already here:* every page shows typed text with `textContent`, never as HTML. Every page also carries a **content security policy** that only allows scripts from our own files, so injected code would be blocked even if it got in. `tests/xss.spec.js` types script-like text into the website form, the help desk and a reply, and checks it appears as plain text and never runs. `tests/csp.spec.js` checks every page has the policy.
+- *Already here:* every page shows typed text with `textContent`, never as HTML. Every page also carries a **content security policy** that only allows scripts and styles from our own files (no inline code or inline styles), so injected code would be blocked even if it got in. `tests/xss.spec.js` types script-like text into the website form, the help desk and a reply, and checks it appears as plain text and never runs. `tests/csp.spec.js` checks every page has the policy.
 - *Limit:* GitHub Pages cannot send HTTP headers, so the policy is a meta tag. A meta tag cannot stop other sites framing ours, and it only protects what comes after it.
 
 ## 4. Access control only in the browser
