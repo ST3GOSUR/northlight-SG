@@ -1,4 +1,4 @@
-// Run: node contact.test.js (fake data only)
+// Run: node contact.test.js (fake data only). Ticket creation is tested in automation.test.js.
 const assert = require('assert');
 const fs = require('fs');
 const c = require('./contact.js');
@@ -9,22 +9,6 @@ const all = c.validate({ name: ' ', email: '', message: 'short' });
 assert.deepEqual(Object.keys(all), ['name', 'email', 'message']);
 assert.match(c.validate({ name: 'A', email: 'ann@', message: 'long enough message' }).email, /name@example\.com/);
 assert.equal(c.validate({ name: 'A', email: 'a@b.co', message: 'x'.repeat(1001) }).message, 'Please keep the message under 1000 characters.');
-
-// Ticket matches the helpdesk's shape and priority rules (impact 1 + urgency 1 = P3, 24 h target)
-const t = c.makeEnquiryTicket(' Ann ', ' ann@example.com ', ' Need a logo please ', 1000);
-assert.deepEqual(Object.keys(t).sort(), ['created', 'id', 'impact', 'issue', 'priority', 'replies', 'requester', 'status', 'urgency']);
-assert.equal(t.requester, 'Ann (ann@example.com)');
-assert.equal(t.issue, 'Website enquiry: Need a logo please');
-assert.deepEqual([t.priority, t.status, t.impact, t.urgency], ['P3', 'New', 1, 1]);
-const helpdesk = require('./helpdesk.js');
-assert.equal(t.priority, helpdesk.priorityOf(t.impact, t.urgency));
-
-// Storage: appends to existing tickets, survives empty/corrupt storage, and surfaces blocked storage
-const mem = (init) => { let v = init; return { getItem: () => v, setItem: (k, x) => { assert.equal(k, c.TICKETS_KEY); v = x; }, get: () => JSON.parse(v) }; };
-let s = mem(null); c.addTicket(t, s); assert.equal(s.get().length, 1);
-s = mem(JSON.stringify([{ id: 1 }])); c.addTicket(t, s); assert.equal(s.get().length, 2);
-s = mem('not json'); c.addTicket(t, s); assert.equal(s.get().length, 1);
-assert.throws(() => c.addTicket(t, { getItem: () => null, setItem: () => { throw new Error('blocked'); } }), /blocked/);
 
 // SEO rules and FAQ JSON-LD for index.html
 const html = fs.readFileSync(__dirname + '/index.html', 'utf8');

@@ -60,6 +60,7 @@
         <a href="#contact">Contact</a>
         <a href="helpdesk.html">Helpdesk</a>
         <a href="crm.html">CRM</a>
+        <a href="automation.html">Automation</a>
         <a href="staff.html">Staff</a>
         <a href="troubleshoot.html">Troubleshooting</a>
       </nav>
@@ -110,8 +111,9 @@
       </form>
     </section>
 
-    <footer>All names and content on this site are fictional. The contact form creates a ticket in the <a href="helpdesk.html">helpdesk</a>, stored only in your browser.</footer>
+    <footer>All names and content on this site are fictional. The contact form runs the rules in <code>rules.json</code>: it adds a lead to the <a href="crm.html">CRM</a> and a ticket to the <a href="helpdesk.html">helpdesk</a>, and an urgent message also becomes P1 with an alert in the <a href="automation.html">outbox</a>. Everything stays in your browser and nothing is really sent.</footer>
   </main>
+  <script src="automation.js"></script>
   <script src="contact.js"></script>
 </body>
 </html>

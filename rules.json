@@ -1,0 +1,34 @@
+{
+  "rules": [
+    {
+      "id": "create-lead",
+      "description": "Every website enquiry becomes a lead in the CRM.",
+      "when": "form_sent",
+      "action": "create_lead"
+    },
+    {
+      "id": "create-ticket",
+      "description": "Every website enquiry becomes a ticket in the help desk.",
+      "when": "form_sent",
+      "action": "create_ticket"
+    },
+    {
+      "id": "urgent-p1",
+      "description": "If the message contains the word urgent, the ticket becomes P1.",
+      "when": "form_sent",
+      "if": { "field": "message", "contains": "urgent" },
+      "action": "set_ticket_priority",
+      "priority": "P1"
+    },
+    {
+      "id": "urgent-alert",
+      "description": "If the message contains the word urgent, queue an alert in the outbox (nothing is really sent).",
+      "when": "form_sent",
+      "if": { "field": "message", "contains": "urgent" },
+      "action": "add_outbox",
+      "to": "duty-manager@example.com",
+      "subject": "URGENT enquiry from {name}",
+      "body": "{name} ({email}) wrote: {message} - ticket priority {priority}"
+    }
+  ]
+}

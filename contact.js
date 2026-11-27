@@ -1,4 +1,4 @@
-const TICKETS_KEY = 'northlight-helpdesk-tickets'; // same key the helpdesk page reads
+// Validates the contact form, then runs the automation rules (rules.json, see automation.js).
 
 // Returns { field: message } for every problem, or {} when the form is fine.
 function validate({ name, email, message }) {
@@ -11,28 +11,13 @@ function validate({ name, email, message }) {
   return errors;
 }
 
-// Same shape as a helpdesk ticket. Website enquiries start as P3 (impact Low, urgency Low), status New.
-function makeEnquiryTicket(name, email, message, now = Date.now()) {
-  return {
-    id: now + Math.random(), requester: `${name.trim()} (${email.trim()})`, issue: 'Website enquiry: ' + message.trim(),
-    impact: 1, urgency: 1, priority: 'P3', status: 'New', created: now, replies: [],
-  };
-}
-
-// Throws if storage is blocked or full; the caller shows an error instead of claiming success.
-function addTicket(ticket, storage) {
-  let list = [];
-  try { const s = JSON.parse(storage.getItem(TICKETS_KEY)); if (Array.isArray(s)) list = s; } catch (e) { /* unreadable: start a fresh list */ }
-  list.push(ticket);
-  storage.setItem(TICKETS_KEY, JSON.stringify(list));
-}
-
 if (typeof document !== 'undefined') {
   const form = document.getElementById('contact-form');
   const status = document.getElementById('form-status');
+  const button = form.querySelector('button[type="submit"]');
   const fields = ['name', 'email', 'message'];
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const values = Object.fromEntries(fields.map((f) => [f, form.elements[f].value]));
     const errors = validate(values);
@@ -49,17 +34,21 @@ if (typeof document !== 'undefined') {
     status.className = '';
     if (first) { first.focus(); return; }
 
+    button.disabled = true; // stops a double click creating two tickets while the rules load
     try {
-      addTicket(makeEnquiryTicket(values.name, values.email, values.message), localStorage);
+      const rules = await loadRules();
+      const { ticket } = runRules(rules, 'form_sent', values, localStorage);
+      const urgent = ticket && ticket.priority === 'P1' ? ' and flagged as urgent' : '';
+      status.textContent = `Thank you, ${values.name.trim()}. Your enquiry was logged${ticket ? ` as a ${ticket.priority} ticket` : ''}${urgent}. This is a demo: nothing leaves your browser.`;
+      status.className = 'ok';
+      form.reset(); // only after success, so a failed send never loses what was typed
     } catch (err) {
-      status.textContent = 'Sorry, your message could not be saved in this browser. Please try again or use another browser.';
+      status.textContent = 'Sorry, your message could not be processed. ' + err.message;
       status.className = 'error';
-      return;
+    } finally {
+      button.disabled = false;
     }
-    status.textContent = `Thank you, ${values.name.trim()}. Your message was added to our help desk as a new ticket. We reply within one working day.`;
-    status.className = 'ok';
-    form.reset();
   });
 } else {
-  module.exports = { validate, makeEnquiryTicket, addTicket, TICKETS_KEY };
+  module.exports = { validate };
 }

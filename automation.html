@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northlight Automation</title>
+  <link rel="stylesheet" href="helpdesk.css">
+  <style>
+    [hidden] { display: none !important; }
+    .scroll { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; background: #fff; min-width: 520px; }
+    th, td { border: 1px solid #d8dce1; padding: 6px; text-align: left; vertical-align: top; }
+    h2 { margin-top: 32px; }
+    .note { background: #fff4d6; border: 1px solid #e0b84a; border-radius: 6px; padding: 12px; }
+    .error { color: #b3261e; font-weight: 600; }
+    td.RAN { color: #1b6e2b; font-weight: 700; }
+    td.SKIPPED { color: #5b6673; }
+    td.ERROR { color: #b3261e; font-weight: 700; }
+    td.EVENT { font-weight: 700; }
+  </style>
+</head>
+<body>
+  <main id="automation-page">
+    <p><a href="index.html">&larr; Northlight Studio</a></p>
+    <h1>Automation</h1>
+    <p class="note"><strong>Nothing is really sent.</strong> The outbox is only a list kept in this browser (localStorage), and all people shown are fake.
+      Rules live in <code>rules.json</code>: edit one, then send another enquiry from the <a href="index.html#contact">home page</a> to see the behaviour change.</p>
+
+    <h2>Outbox</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Time</th><th>To</th><th>Subject</th><th>Message</th><th>Status</th></tr></thead>
+      <tbody id="outbox"></tbody>
+    </table></div>
+
+    <h2>Log</h2>
+    <p>One line for every rule that was checked: RAN, SKIPPED (condition not met) or ERROR. Lines from one enquiry share a run code. Newest first.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Time</th><th>Run</th><th>Rule</th><th>Outcome</th><th>What happened</th></tr></thead>
+      <tbody id="log"></tbody>
+    </table></div>
+    <p><button type="button" id="clear">Clear outbox and log</button></p>
+
+    <h2>Rules in rules.json</h2>
+    <p id="rules-error" class="error" role="alert" hidden></p>
+    <ul id="rules"></ul>
+  </main>
+  <script src="automation.js"></script>
+</body>
+</html>
